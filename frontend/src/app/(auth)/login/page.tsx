@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -45,7 +44,6 @@ async function loginUser(data: LoginFormValues) {
 }
 
 export default function LoginPage() {
-  const router = useRouter();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const form = useForm<LoginFormValues>({
@@ -56,16 +54,22 @@ export default function LoginPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      // Persist token for authenticated requests
+      // 1. Persist for client-side axios requests
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
       localStorage.setItem("email", data.email);
 
-      // Route based on role
+      // 2. CRITICAL — set cookie so Next.js Server Component layouts can
+      //    read it for route protection. Must happen BEFORE navigation.
+      document.cookie = `auth_token=${data.token}; path=/; SameSite=Lax; max-age=86400`;
+
+      // 3. Use window.location.href (full page load) instead of router.push()
+      //    so the browser commits the cookie to disk before the server-side
+      //    layout.tsx fires — router.push() can race against cookie writes.
       if (data.role === "ADMIN") {
-        router.push("/admin/dashboard");
+        window.location.href = "/admin/dashboard";
       } else {
-        router.push("/");
+        window.location.href = "/";
       }
     },
     onError: (err: any) => {
