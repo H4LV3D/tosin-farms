@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { decodeJwtPayload, isTokenExpired } from "@/lib/auth";
+import Sidebar from "./sidebar";
 
 export default async function AuthenticatedLayout({
     children,
@@ -20,5 +21,10 @@ export default async function AuthenticatedLayout({
         redirect("/login");
     }
 
-    return <>{children}</>;
+    return (<div className="flex h-screen bg-[#f7f5f2]">
+        <Sidebar userEmail={payload.email} role={payload.role} />
+        <main className="flex-1 overflow-auto">
+            {children}
+        </main>
+    </div>);
 }

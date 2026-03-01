@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { decodeJwtPayload, isTokenExpired } from "@/lib/auth";
-import AdminSidebar from "./AdminSidebar";
 
 export default async function AdminLayout({
     children,
@@ -27,11 +26,6 @@ export default async function AdminLayout({
     }
 
     return (
-        <div className="flex min-h-screen bg-[#f7f5f2]">
-            <AdminSidebar userEmail={payload.email} />
-            <main className="flex-1 overflow-auto">
-                {children}
-            </main>
-        </div>
+        <>{children}</>
     );
 }

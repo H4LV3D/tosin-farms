@@ -11,15 +11,23 @@ import {
     Sprout,
 } from "lucide-react";
 
-const navItems = [
+const userNavItems = [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { label: "Products", href: "/admin/products", icon: Package },
     { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
 ];
 
-export default function AdminSidebar({ userEmail }: { userEmail: string }) {
+const adminNavItems = [
+    { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+    { label: "Products", href: "/admin/products", icon: Package },
+    { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
+];
+
+export default function Sidebar({ userEmail, role }: { userEmail: string, role: string }) {
     const pathname = usePathname();
     const router = useRouter();
+
+    const navItems = role?.toUpperCase() !== "ADMIN" ? adminNavItems : userNavItems;
 
     function handleLogout() {
         // Clear cookie and localStorage
@@ -31,7 +39,7 @@ export default function AdminSidebar({ userEmail }: { userEmail: string }) {
     }
 
     return (
-        <aside className="w-64 min-h-screen bg-[#1a1a0e] text-stone-200 flex flex-col shrink-0 shadow-xl">
+        <aside className="w-64 h-screen bg-[#1a1a0e] text-stone-200 flex flex-col shrink-0 shadow-xl">
             {/* Brand */}
             <div className="px-6 py-7 border-b border-white/10">
                 <div className="flex items-center gap-3">
@@ -47,15 +55,15 @@ export default function AdminSidebar({ userEmail }: { userEmail: string }) {
 
             {/* Nav */}
             <nav className="flex-1 px-3 py-5 space-y-1">
-                {navItems.map(({ label, href, icon: Icon }) => {
+                {adminNavItems.map(({ label, href, icon: Icon }) => {
                     const active = pathname === href || pathname.startsWith(href + "/");
                     return (
                         <Link
                             key={href}
                             href={href}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${active
-                                    ? "bg-amber-600 text-white shadow-lg shadow-amber-900/40"
-                                    : "text-stone-400 hover:bg-white/5 hover:text-white"
+                            className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all ${active
+                                ? "bg-amber-600 text-white shadow-lg shadow-amber-900/40"
+                                : "text-stone-400 hover:bg-white/5 hover:text-white"
                                 }`}
                         >
                             <Icon className="w-4 h-4 shrink-0" />

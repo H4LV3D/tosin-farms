@@ -33,6 +33,8 @@ model Product {
   description String?
   price       Float
   stock       Int      @default(0)
+  category    String?  // e.g. 'Grains', 'Cassava', 'Fruits'
+  images      String[] // Array of image URLs
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   orderItems  OrderItem[]

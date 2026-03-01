@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Lora } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import QueryProvider from "@/lib/QueryProvider";
 
 const dmSans = DM_Sans({
@@ -32,9 +30,7 @@ export default function RootLayout({
         className={`${dmSans.variable} ${lora.variable} font-sans antialiased text-earth bg-cream selection:bg-amber-800 selection:text-amber-100`}
       >
         <QueryProvider>
-          <Header />
           <main>{children}</main>
-          <Footer />
         </QueryProvider>
       </body>
     </html>

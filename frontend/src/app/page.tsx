@@ -4,11 +4,12 @@ import { Products } from "@/components/sections/Products";
 import { Process } from "@/components/sections/Process";
 import { Comparison } from "@/components/sections/Comparison";
 import { TestimonialsCTA } from "@/components/sections/TestimonialsCTA";
-import { PageObserver } from "@/components/ui/PageObserver";
+import { PageObserver } from "@/components/shared/PageObserver";
+import PageLayout from "@/components/layout/pageLayout";
 
 export default function Home() {
   return (
-    <>
+    <PageLayout>
       <PageObserver />
       <Hero />
       <WhyChooseUs />
@@ -16,6 +17,6 @@ export default function Home() {
       <Process />
       <Comparison />
       <TestimonialsCTA />
-    </>
+    </PageLayout>
   );
 }
