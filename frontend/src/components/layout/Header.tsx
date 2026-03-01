@@ -48,7 +48,7 @@ export function Header() {
 
         {/* Nav */}
         <nav className="hidden lg:flex items-center gap-8">
-          <Link
+          {/* <Link
             href="/#products"
             className="text-xs uppercase tracking-widest font-semibold text-stone-500 hover:text-amber-700 transition-colors"
           >
@@ -71,12 +71,12 @@ export function Header() {
             className="text-xs uppercase tracking-widest font-semibold text-stone-500 hover:text-amber-700 transition-colors"
           >
             Reviews
-          </Link>
+          </Link> */}
           <Link
             href="/shop"
             className="text-xs uppercase tracking-widest font-bold text-amber-700 hover:text-amber-600 transition-colors"
           >
-            Shop Online
+            Shop
           </Link>
           <Link
             href="/login"
