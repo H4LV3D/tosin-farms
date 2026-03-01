@@ -47,7 +47,7 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = () => {
     // Connect to the Backend Auth Route
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "http://localhost:3000/google";
   };
 
   return (
@@ -58,7 +58,7 @@ export default function LoginPage() {
             Welcome Back
           </CardTitle>
           <CardDescription className="text-stone-500">
-            Sign in to manage your orders from Tosin Farms.
+            Sign in to manage your orders from Tosi Farms.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -150,7 +150,7 @@ export default function LoginPage() {
           <p className="text-sm text-stone-500">
             Don't have an account?{" "}
             <Link
-              href="/auth/register"
+              href="/register"
               className="text-amber-700 font-bold hover:underline"
             >
               Sign up

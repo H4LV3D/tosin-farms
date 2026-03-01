@@ -15,7 +15,7 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "Tosin Farms — From Our Fields to Your Table",
+  title: "Tosi Farms — From Our Fields to Your Table",
   description:
     "Fresh cassava, maize, fruits and artisan-processed foods like garri, grown and processed locally.",
 };

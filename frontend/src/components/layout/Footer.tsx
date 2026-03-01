@@ -42,7 +42,7 @@ export function Footer() {
                 />
               </svg>
               <span className="font-display font-bold text-xl text-white">
-                Tosin Farms
+                Tosi Farms
               </span>
             </div>
             <p className="text-stone-400 text-sm leading-relaxed max-w-sm">
@@ -129,7 +129,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/auth/login"
+                  href="/login"
                   className="hover:text-amber-400 transition-colors"
                 >
                   Customer Login
@@ -145,13 +145,13 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-stone-400">
               <li>📍 Off Farm Road, Local Gov, State.</li>
               <li>📞 +234 000 000 0000</li>
-              <li>✉️ hello@tosinfarms.com</li>
+              <li>✉️ hello@tosifarms.com</li>
             </ul>
           </div>
         </div>
 
         <div className="pt-8 border-t border-white/5 text-center text-xs text-stone-500 flex flex-col sm:flex-row items-center justify-between">
-          <p>© {new Date().getFullYear()} Tosin Farms. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Tosi Farms. All rights reserved.</p>
           <div className="flex items-center gap-4 mt-4 sm:mt-0">
             <Link href="#" className="hover:text-amber-400 transition-colors">
               Terms

@@ -49,7 +49,7 @@ export default function RegisterPage() {
 
   const handleGoogleSignIn = () => {
     // Connect to the Backend Auth Route
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "http://localhost:3000/google";
   };
 
   return (
@@ -57,7 +57,7 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md shadow-xl bg-white">
         <CardHeader className="space-y-3 text-center">
           <CardTitle className="font-display text-3xl font-semibold text-earth">
-            Join Tosin Farms
+            Join Tosi Farms
           </CardTitle>
           <CardDescription className="text-stone-500">
             Create an account to buy fresh, local produce directly.
@@ -172,7 +172,7 @@ export default function RegisterPage() {
           <p className="text-sm text-stone-500">
             Already have an account?{" "}
             <Link
-              href="/auth/login"
+              href="/login"
               className="text-amber-700 font-bold hover:underline"
             >
               Sign in

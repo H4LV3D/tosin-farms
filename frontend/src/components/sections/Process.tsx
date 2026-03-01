@@ -89,11 +89,11 @@ export function Process() {
               <div className="absolute bottom-8 left-8 right-8">
                 <div className="bg-white/90 backdrop-blur p-6 rounded-xl border border-white/40 shadow-lg">
                   <p className="font-display text-[#1c1917] font-medium italic text-sm leading-relaxed">
-                    "We grow what we know. Every crop on Tosin Farms is handled
+                    "We grow what we know. Every crop on Tosi Farms is handled
                     with experience passed down through generations of farming."
                   </p>
                   <p className="text-xs text-stone-500 mt-3 font-semibold uppercase tracking-widest">
-                    — Tosin Farms Team
+                    — Tosi Farms Team
                   </p>
                 </div>
               </div>

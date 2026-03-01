@@ -15,7 +15,7 @@ export function Comparison() {
             The Real Difference
           </h2>
           <p className="reveal text-stone-400 text-lg leading-relaxed">
-            When you buy from Tosin Farms, you're not just getting food — you're
+            When you buy from Tosi Farms, you're not just getting food — you're
             getting quality, freshness, and trust you can taste.
           </p>
         </div>
@@ -26,7 +26,7 @@ export function Comparison() {
               <div className="grid grid-cols-4 gap-4 p-6 border-b border-white/5 bg-white/5 text-[10px] uppercase tracking-widest font-bold text-stone-500">
                 <div className="col-span-1">What You Get</div>
                 <div className="text-right">Market / Trader</div>
-                <div className="text-right text-amber-400">Tosin Farms</div>
+                <div className="text-right text-amber-400">Tosi Farms</div>
                 <div className="text-right">Advantage</div>
               </div>
               <div className="divide-y divide-white/5 text-sm">
@@ -122,7 +122,7 @@ export function Comparison() {
                     You Know Your Farmer.
                   </div>
                   <span className="text-sm text-stone-300 leading-snug block">
-                    Fresh, naturally grown, processed on-site. That's the Tosin
+                    Fresh, naturally grown, processed on-site. That's the Tosi
                     Farms difference.
                   </span>
                 </div>

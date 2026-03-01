@@ -32,7 +32,7 @@ export function Hero() {
 
             <p className="reveal text-lg text-stone-300 max-w-lg mb-10 leading-relaxed font-light">
               From our cassava fields and maize farms to freshly processed garri
-              — Tosin Farms brings the best of the land straight to your table.
+              — Tosi Farms brings the best of the land straight to your table.
               Grown with care, delivered with pride.
             </p>
 

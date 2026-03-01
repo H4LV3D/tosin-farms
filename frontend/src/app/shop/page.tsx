@@ -35,7 +35,7 @@ export default function ShopPage() {
     },
     {
       id: "p3",
-      title: "Tosin Farms Garri (10kg)",
+      title: "Tosi Farms Garri (10kg)",
       price: "₦9,000",
       category: "processed",
       img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&q=75",
@@ -84,11 +84,10 @@ export default function ShopPage() {
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
-                activeCategory === cat.id
+              className={`whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${activeCategory === cat.id
                   ? "bg-amber-700 text-white shadow-md shadow-amber-900/20"
                   : "bg-white text-stone-500 border border-stone-200 hover:border-amber-400 hover:text-amber-700"
-              }`}
+                }`}
             >
               {cat.name}
             </button>

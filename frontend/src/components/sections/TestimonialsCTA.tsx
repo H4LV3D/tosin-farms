@@ -18,7 +18,7 @@ export function TestimonialsCTA() {
             <div className="reveal bg-white rounded-2xl p-8 shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
               <div className="flex gap-1 mb-4 text-amber-400">★★★★★</div>
               <p className="font-display text-[#1c1917] italic text-base leading-relaxed mb-6">
-                "The garri from Tosin Farms is the best I've tasted — crunchy,
+                "The garri from Tosi Farms is the best I've tasted — crunchy,
                 clean, and properly dried. We now buy in bulk for our whole
                 compound."
               </p>
@@ -55,7 +55,7 @@ export function TestimonialsCTA() {
               <div className="flex gap-1 mb-4 text-amber-400">★★★★★</div>
               <p className="font-display text-[#1c1917] italic text-base leading-relaxed mb-6">
                 "Their pineapples and plantains are always fresh. I stock my
-                market stall from Tosin Farms every week. My customers always
+                market stall from Tosi Farms every week. My customers always
                 ask where I get them!"
               </p>
               <div className="flex items-center gap-3">
@@ -173,7 +173,7 @@ export function TestimonialsCTA() {
             <h2 className="font-display text-3xl lg:text-5xl font-semibold text-[#1c1917] mb-6 leading-tight">
               Ready to Order from
               <br />
-              <em className="not-italic text-gold">Tosin Farms?</em>
+              <em className="not-italic text-gold">Tosi Farms?</em>
             </h2>
             <p className="text-lg text-stone-600 max-w-xl mx-auto leading-relaxed">
               Place an order for fresh cassava, maize, fruits, garri, and more.
@@ -204,7 +204,7 @@ export function TestimonialsCTA() {
               </span>
             </a>
             <a
-              href="mailto:hello@tosinfarms.com"
+              href="mailto:hello@tosifarms.com"
               className="group inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#1c1917] py-2 border-b-2 border-transparent hover:border-amber-700 transition-all"
             >
               <span>Send an Email</span>

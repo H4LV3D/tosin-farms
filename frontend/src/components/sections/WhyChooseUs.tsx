@@ -26,7 +26,7 @@ export function WhyChooseUs() {
 
           <div>
             <span className="reveal inline-block text-[10px] uppercase tracking-[0.2em] text-amber-700 font-bold mb-6">
-              Why Choose Tosin Farms
+              Why Choose Tosi Farms
             </span>
             <h2 className="reveal font-display text-3xl lg:text-4xl font-semibold text-[#1c1917] mb-6 leading-snug">
               The Challenge of Finding
@@ -35,7 +35,7 @@ export function WhyChooseUs() {
             </h2>
             <p className="reveal text-lg text-stone-600 leading-relaxed mb-10">
               Markets are flooded with produce that travels far and sits long.
-              At Tosin Farms, everything — from our cassava tubers to our garri
+              At Tosi Farms, everything — from our cassava tubers to our garri
               — is grown right here and processed with traditional care, so you
               get the best nutritional value and flavour every time.
             </p>
@@ -55,7 +55,7 @@ export function WhyChooseUs() {
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                The Tosin Farms Promise
+                The Tosi Farms Promise
               </h3>
               <ul className="space-y-6">
                 <li className="flex gap-4">

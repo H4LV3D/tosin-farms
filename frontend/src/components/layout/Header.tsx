@@ -9,7 +9,7 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4">
-      <div className="absolute inset-0 bg-[#fdf8f0]/90 backdrop-blur-md border-b border-amber-200/40"></div>
+      <div className="absolute inset-0 bg-[#fdf8f0]/90 backdrop-blur-md"></div>
       <div className="relative max-w-screen-xl mx-auto px-6 lg:px-10 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
@@ -42,7 +42,7 @@ export function Header() {
             />
           </svg>
           <span className="font-display font-bold text-[#1c1917] text-lg tracking-tight">
-            Tosin Farms
+            Tosi Farms
           </span>
         </Link>
 
@@ -79,7 +79,7 @@ export function Header() {
             Shop Online
           </Link>
           <Link
-            href="/auth/login"
+            href="/login"
             className="text-xs uppercase tracking-widest font-semibold text-stone-500 hover:text-amber-700 transition-colors"
           >
             Login
@@ -140,7 +140,7 @@ export function Header() {
           </Link>
           <Link
             onClick={() => setIsMobileMenuOpen(false)}
-            href="/auth/login"
+            href="/login"
             className="block text-sm font-semibold text-stone-700 py-2 border-b border-stone-100"
           >
             Login
