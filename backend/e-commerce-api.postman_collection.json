@@ -1,0 +1,162 @@
+{
+  "info": {
+    "name": "E-Commerce API",
+    "description": "API documentation for the Scalable NestJS E-Commerce Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Google Authentication",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/google",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "google"
+              ]
+            },
+            "description": "Initiates the Google OAuth2 login flow. Access via browser, redirects to Google login."
+          },
+          "response": []
+        },
+        {
+          "name": "Google Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/google/callback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "google",
+                "callback"
+              ]
+            },
+            "description": "Callback URL for Google OAuth2. Returns the JWT token upon successful authentication."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Checkout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@example.com\",\n  \"dispatchType\": \"DHL\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders/checkout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "checkout"
+              ]
+            },
+            "description": "Process checkout for the current user's cart. `dispatchType` can be 'DHL' or 'FEDEX'.\n\nRequires Bearer Token authentication (JWT)."
+          },
+          "response": []
+        },
+        {
+          "name": "Paystack Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-paystack-signature",
+                "value": "your_paystack_signature_hash_here",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"charge.success\",\n  \"data\": {\n    \"reference\": \"ORDER_UUID_HERE\",\n    \"id\": \"PAYSTACK_TXN_ID_HERE\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders/webhook/paystack",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "webhook",
+                "paystack"
+              ]
+            },
+            "description": "Webhook endpoint for Paystack payment confirmation. Expects `x-paystack-signature` header for security."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    }
+  ]
+}
