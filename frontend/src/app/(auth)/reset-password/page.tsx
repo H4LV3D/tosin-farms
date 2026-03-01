@@ -118,7 +118,7 @@ function ResetPasswordForm() {
                         <div className="p-4 bg-green-50 text-green-700 rounded-md border border-green-200 text-center font-medium">
                             {successMessage}
                         </div>
-                        <Link href="/auth/login" className="block w-full">
+                        <Link href="/login" className="block w-full">
                             <Button className="w-full h-12 bg-amber-700 hover:bg-amber-600 text-white font-bold tracking-widest uppercase transition-all">
                                 Go to Login
                             </Button>

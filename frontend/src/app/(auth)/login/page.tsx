@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,6 +26,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Loader2 } from "lucide-react";
+import appAxios from "@/config/axios";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -31,23 +36,52 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+async function loginUser(data: LoginFormValues) {
+  const res = await appAxios.post<{ token: string; role: string; email: string }>(
+    "/auth/login",
+    data
+  );
+  return res.data;
+}
+
 export default function LoginPage() {
+  const router = useRouter();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
+    defaultValues: { email: "", password: "" },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      // Persist token for authenticated requests
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("email", data.email);
+
+      // Route based on role
+      if (data.role === "ADMIN") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/");
+      }
+    },
+    onError: (err: any) => {
+      const message =
+        err?.response?.data?.message || "Invalid email or password.";
+      setErrorMsg(message);
     },
   });
 
   function onSubmit(data: LoginFormValues) {
-    // Add custom credential login later
-    console.log("Credentials login:", data);
+    setErrorMsg(null);
+    mutate(data);
   }
 
   const handleGoogleSignIn = () => {
-    // Connect to the Backend Auth Route
-    window.location.href = "http://localhost:9000/google";
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
 
   return (
@@ -103,11 +137,30 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
+
+              {errorMsg && (
+                <p className="text-sm text-red-500 font-medium">{errorMsg}</p>
+              )}
+
+              <div className="flex justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-amber-700 hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
               <Button
                 type="submit"
+                disabled={isPending}
                 className="w-full h-12 bg-amber-700 hover:bg-amber-600 text-white font-bold tracking-widest uppercase transition-all"
               >
-                Sign In
+                {isPending ? (
+                  <Loader2 className="animate-spin w-5 h-5" />
+                ) : (
+                  "Sign In"
+                )}
               </Button>
             </form>
           </Form>
@@ -149,10 +202,7 @@ export default function LoginPage() {
         <CardFooter className="justify-center">
           <p className="text-sm text-stone-500">
             Don't have an account?{" "}
-            <Link
-              href="/register"
-              className="text-amber-700 font-bold hover:underline"
-            >
+            <Link href="/register" className="text-amber-700 font-bold hover:underline">
               Sign up
             </Link>
           </p>

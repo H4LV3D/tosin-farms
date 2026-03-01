@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { decodeJwtPayload, isTokenExpired } from "@/lib/auth";
 
 export default async function AuthenticatedLayout({
     children,
@@ -7,12 +8,16 @@ export default async function AuthenticatedLayout({
     children: React.ReactNode;
 }) {
     const cookieStore = await cookies();
-    const hasAuth = cookieStore.get("has_auth");
+    const tokenCookie = cookieStore.get("auth_token");
 
-    // Basic check for a placeholder authentication cookie.
-    // Replace this with actual auth logic (e.g., verifying a JWT or session token).
-    if (!hasAuth || hasAuth.value !== "true") {
-        redirect("/auth/login");
+    if (!tokenCookie?.value) {
+        redirect("/login");
+    }
+
+    const payload = decodeJwtPayload(tokenCookie.value);
+
+    if (!payload || isTokenExpired(payload)) {
+        redirect("/login");
     }
 
     return <>{children}</>;

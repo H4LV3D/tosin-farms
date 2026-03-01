@@ -7,10 +7,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GoogleStrategy } from './strategies/google/google.strategy';
 import { JwtAuthStrategy } from './strategies/jwt/jwt.strategy';
 import { UsersModule } from '../users/users.module';
+import { PrismaModule } from '../../prisma/prisma.module';
 
 @Module({
   imports: [
     UsersModule,
+    PrismaModule,
     PassportModule,
     ConfigModule,
     JwtModule.registerAsync({
@@ -30,4 +32,4 @@ import { UsersModule } from '../users/users.module';
   providers: [AuthService, GoogleStrategy, JwtAuthStrategy],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

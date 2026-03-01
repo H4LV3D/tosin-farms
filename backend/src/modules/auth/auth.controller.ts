@@ -1,12 +1,24 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import type { Request } from 'express';
 
+class LoginDto {
+  email: string;
+  password: string;
+}
+
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
+  // ─── Email / Password Login ───────────────────────────────────────────────
+  @Post('login')
+  async login(@Body() body: LoginDto) {
+    return this.authService.login(body.email, body.password);
+  }
+
+  // ─── Google OAuth ─────────────────────────────────────────────────────────
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req: Request) {
