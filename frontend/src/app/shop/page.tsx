@@ -1,60 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
+import { fetchCategories, fetchProducts, Category, Product } from "@/lib/api";
 
 export default function ShopPage() {
   const [activeCategory, setActiveCategory] = useState("all");
 
-  const categories = [
-    { id: "all", name: "All Products" },
-    { id: "cassava", name: "Cassava" },
-    { id: "maize", name: "Maize" },
-    { id: "fruits", name: "Fresh Fruits" },
-    { id: "processed", name: "Processed Foods" },
-  ];
+  const { data: categories = [], isLoading: isCategoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
 
-  const products = [
-    {
-      id: "p1",
-      title: "Fresh Cassava Tubers (20kg)",
-      price: "₦8,500",
-      category: "cassava",
-      img: "https://images.unsplash.com/photo-1607305387299-a3d9611cd469?w=600&q=75",
-      badge: "In Stock",
-    },
-    {
-      id: "p2",
-      title: "Yellow Maize (50kg Bag)",
-      price: "₦18,000",
-      category: "maize",
-      img: "https://images.unsplash.com/photo-1601593768799-76e3ee3b8e4e?w=600&q=75",
-      badge: "Best Seller",
-    },
-    {
-      id: "p3",
-      title: "Tosi Farms Garri (10kg)",
-      price: "₦9,000",
-      category: "processed",
-      img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&q=75",
-      badge: "Small Batch",
-    },
-    {
-      id: "p4",
-      title: "Fresh Pineapples (1 Dozen)",
-      price: "₦6,000",
-      category: "fruits",
-      img: "https://images.unsplash.com/photo-1519096845289-95806ee03a1a?w=600&q=75",
-      badge: "Seasonal",
-    },
-  ];
+  const { data: products = [], isLoading: isProductsLoading } = useQuery({
+    queryKey: ["products", activeCategory],
+    queryFn: () => fetchProducts(activeCategory),
+  });
 
-  const filteredProducts =
-    activeCategory === "all"
-      ? products
-      : products.filter((p) => p.category === activeCategory);
+  const isLoading = isCategoriesLoading || isProductsLoading;
+
+  // With React Query fetching the specific category, products is already filtered by backend (or API utility).
+  // We can just use the returned products directly.
+  const filteredProducts = products;
 
   return (
     <div className="min-h-screen pt-28 pb-20 bg-cream">
@@ -80,13 +50,22 @@ export default function ShopPage() {
 
         {/* Categories */}
         <div className="flex overflow-x-auto gap-3 pb-4 mb-8 scrollbar-hide">
+          <button
+            onClick={() => setActiveCategory("all")}
+            className={`whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${activeCategory === "all"
+              ? "bg-amber-700 text-white shadow-md shadow-amber-900/20"
+              : "bg-white text-stone-500 border border-stone-200 hover:border-amber-400 hover:text-amber-700"
+              }`}
+          >
+            All Products
+          </button>
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
               className={`whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${activeCategory === cat.id
-                  ? "bg-amber-700 text-white shadow-md shadow-amber-900/20"
-                  : "bg-white text-stone-500 border border-stone-200 hover:border-amber-400 hover:text-amber-700"
+                ? "bg-amber-700 text-white shadow-md shadow-amber-900/20"
+                : "bg-white text-stone-500 border border-stone-200 hover:border-amber-400 hover:text-amber-700"
                 }`}
             >
               {cat.name}
@@ -95,36 +74,61 @@ export default function ShopPage() {
         </div>
 
         {/* Product Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredProducts.map((p) => (
-            <div
-              key={p.id}
-              className="bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 group"
-            >
-              <div className="relative h-60 overflow-hidden bg-stone-100">
-                <img
-                  src={p.img}
-                  alt={p.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <span className="absolute top-4 left-4 bg-white/90 backdrop-blur text-[#1c1917] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full shadow-sm">
-                  {p.badge}
-                </span>
-              </div>
-              <div className="p-6">
-                <h3 className="font-display text-lg font-semibold text-earth mb-2 group-hover:text-amber-700 transition-colors">
-                  {p.title}
-                </h3>
-                <div className="text-xl font-bold text-[#1c1917] mb-6">
-                  {p.price}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="w-8 h-8 animate-spin text-amber-700" />
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-stone-500">No products found.</p>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredProducts.map((p) => (
+              <div
+                key={p.id}
+                className="bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 group"
+              >
+                <div className="relative h-60 overflow-hidden bg-stone-100">
+                  {p.image_url ? (
+                    <img
+                      src={p.image_url}
+                      alt={p.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-stone-200">
+                      <span className="text-stone-400 text-sm">No Image</span>
+                    </div>
+                  )}
+                  {p.stock > 0 ? (
+                    <span className="absolute top-4 left-4 bg-white/90 backdrop-blur text-[#1c1917] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full shadow-sm">
+                      In Stock
+                    </span>
+                  ) : (
+                    <span className="absolute top-4 left-4 bg-red-100 backdrop-blur text-red-800 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full shadow-sm">
+                      Out of Stock
+                    </span>
+                  )}
                 </div>
-                <Button className="w-full h-11 bg-white border border-stone-200 text-earth font-bold text-xs uppercase tracking-widest hover:bg-amber-700 hover:text-white transition-all shadow-none">
-                  Add to Cart
-                </Button>
+                <div className="p-6">
+                  <h3 className="font-display text-lg font-semibold text-earth mb-2 group-hover:text-amber-700 transition-colors">
+                    {p.name}
+                  </h3>
+                  <div className="text-xl font-bold text-[#1c1917] mb-6">
+                    ₦{p.price.toLocaleString()}
+                  </div>
+                  <Button
+                    disabled={p.stock === 0}
+                    className="w-full h-11 bg-white border border-stone-200 text-earth font-bold text-xs uppercase tracking-widest hover:bg-amber-700 hover:text-white transition-all shadow-none"
+                  >
+                    Add to Cart
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

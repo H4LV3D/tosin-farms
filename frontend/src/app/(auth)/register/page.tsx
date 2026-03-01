@@ -24,30 +24,32 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-const loginSchema = z.object({
+const registerSchema = z.object({
+  fullName: z.string().min(2, "Full name is required."),
   email: z.string().email("Please enter a valid email address."),
   password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export default function LoginPage() {
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+export default function RegisterPage() {
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      fullName: "",
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(data: LoginFormValues) {
-    // Add custom credential login later
-    console.log("Credentials login:", data);
+  function onSubmit(data: RegisterFormValues) {
+    // Add custom credential register later
+    console.log("Credentials register:", data);
   }
 
   const handleGoogleSignIn = () => {
     // Connect to the Backend Auth Route
-    window.location.href = "http://localhost:3000/google";
+    window.location.href = "http://localhost:9000/google";
   };
 
   return (
@@ -55,15 +57,34 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-xl bg-white">
         <CardHeader className="space-y-3 text-center">
           <CardTitle className="font-display text-3xl font-semibold text-earth">
-            Welcome Back
+            Join Tosi Farms
           </CardTitle>
           <CardDescription className="text-stone-500">
-            Sign in to manage your orders from Tosi Farms.
+            Create an account to buy fresh, local produce directly.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold uppercase tracking-widest text-stone-500">
+                      Full Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Folashade Ayo"
+                        className="h-12 bg-stone-50 focus-visible:ring-amber-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="email"
@@ -107,7 +128,7 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full h-12 bg-amber-700 hover:bg-amber-600 text-white font-bold tracking-widest uppercase transition-all"
               >
-                Sign In
+                Create Account
               </Button>
             </form>
           </Form>
@@ -121,6 +142,7 @@ export default function LoginPage() {
           </div>
 
           <Button
+            type="button"
             variant="outline"
             className="w-full h-12 font-semibold text-earth border-stone-200 hover:bg-stone-50 hover:text-earth transition-colors"
             onClick={handleGoogleSignIn}
@@ -143,17 +165,17 @@ export default function LoginPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            Sign in with Google
+            Sign up with Google
           </Button>
         </CardContent>
         <CardFooter className="justify-center">
           <p className="text-sm text-stone-500">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/register"
+              href="/login"
               className="text-amber-700 font-bold hover:underline"
             >
-              Sign up
+              Sign in
             </Link>
           </p>
         </CardFooter>
