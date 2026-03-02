@@ -1,19 +1,18 @@
-import React from 'react'
-import { Header } from './Header'
-import { Footer } from './Footer'
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { CartDrawer } from "@/components/shop/CartDrawer";
 
-type Props = {
-    children: React.ReactNode
-}
-
-const PageLayout = ({ children }: Props) => {
+export default function PageLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     return (
         <>
             <Header />
+            <CartDrawer />
             {children}
             <Footer />
         </>
-    )
+    );
 }
-
-export default PageLayout

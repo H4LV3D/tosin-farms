@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { CartButton } from "@/components/shop/CartButton";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -48,30 +49,6 @@ export function Header() {
 
         {/* Nav */}
         <nav className="hidden lg:flex items-center gap-8">
-          {/* <Link
-            href="/#products"
-            className="text-xs uppercase tracking-widest font-semibold text-stone-500 hover:text-amber-700 transition-colors"
-          >
-            Our Products
-          </Link>
-          <Link
-            href="/#difference"
-            className="text-xs uppercase tracking-widest font-semibold text-stone-500 hover:text-amber-700 transition-colors"
-          >
-            Our Story
-          </Link>
-          <Link
-            href="/#process"
-            className="text-xs uppercase tracking-widest font-semibold text-stone-500 hover:text-amber-700 transition-colors"
-          >
-            How We Farm
-          </Link>
-          <Link
-            href="/#testimonials"
-            className="text-xs uppercase tracking-widest font-semibold text-stone-500 hover:text-amber-700 transition-colors"
-          >
-            Reviews
-          </Link> */}
           <Link
             href="/shop"
             className="text-xs uppercase tracking-widest font-bold text-amber-700 hover:text-amber-600 transition-colors"
@@ -86,51 +63,34 @@ export function Header() {
           </Link>
         </nav>
 
-        <Link
-          href="/#order"
-          className="hidden sm:inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-full transition-all hover:scale-105"
-        >
-          Order Now
-        </Link>
+        {/* Right actions */}
+        <div className="flex items-center gap-2">
+          <CartButton />
+          <Link
+            href="/shop"
+            className="hidden sm:inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-full transition-all hover:scale-105"
+          >
+            Order Now
+          </Link>
 
-        {/* Mobile hamburger */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden flex flex-col gap-1.5 p-2 text-stone-700"
-          aria-label="Menu"
-        >
-          {isMobileMenuOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
-        </button>
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden flex flex-col gap-1.5 p-2 text-stone-700 ml-1"
+            aria-label="Menu"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 right-0 bg-[#fdf8f0] border-b border-amber-200/60 shadow-lg py-6 px-6 space-y-4">
-          <Link
-            onClick={() => setIsMobileMenuOpen(false)}
-            href="/#products"
-            className="block text-sm font-semibold text-stone-700 py-2 border-b border-stone-100"
-          >
-            Our Products
-          </Link>
-          <Link
-            onClick={() => setIsMobileMenuOpen(false)}
-            href="/#difference"
-            className="block text-sm font-semibold text-stone-700 py-2 border-b border-stone-100"
-          >
-            Our Story
-          </Link>
-          <Link
-            onClick={() => setIsMobileMenuOpen(false)}
-            href="/#process"
-            className="block text-sm font-semibold text-stone-700 py-2 border-b border-stone-100"
-          >
-            How We Farm
-          </Link>
           <Link
             onClick={() => setIsMobileMenuOpen(false)}
             href="/shop"
@@ -147,7 +107,7 @@ export function Header() {
           </Link>
           <Link
             onClick={() => setIsMobileMenuOpen(false)}
-            href="/#order"
+            href="/shop"
             className="block text-center bg-amber-700 text-white text-sm font-bold py-3 rounded-full mt-4"
           >
             Order Now

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -16,6 +17,8 @@ export class AuthService {
 
   // ─── Email / Password Login ───────────────────────────────────────────────
   async login(email: string, password: string) {
+    if (!email) throw new BadRequestException('Email is required');
+
     const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user || !user.password) {

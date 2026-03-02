@@ -1,10 +1,15 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { AuthService } from './auth.service';
 import type { Request } from 'express';
 
 class LoginDto {
+  @IsEmail({}, { message: 'A valid email address is required' })
   email: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Password is required' })
   password: string;
 }
 

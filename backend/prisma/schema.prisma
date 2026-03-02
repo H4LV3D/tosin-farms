@@ -49,6 +49,8 @@ model Order {
   paymentReference String?
   dispatchProvider String?     // e.g., 'DHL', 'FEDEX'
   trackingNumber   String?
+  shippingAddress  String?     // JSON-encoded ShippingAddress object
+  customerNote     String?
   items            OrderItem[]
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt

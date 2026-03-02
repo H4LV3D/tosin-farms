@@ -277,7 +277,7 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
                 {/* Revenue + Orders Area Chart */}
                 <Card className="xl:col-span-2 border border-stone-100 bg-white shadow-sm rounded-2xl">
-                    <CardHeader className="px-6 pt-6 pb-2">
+                    <CardHeader className="px-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle className="text-base font-bold text-stone-800">Revenue & Orders</CardTitle>
@@ -289,7 +289,7 @@ export default function AdminDashboardPage() {
                             </span>
                         </div>
                     </CardHeader>
-                    <CardContent className="px-6 pb-6 pt-2">
+                    <CardContent className="px-6">
                         <ChartContainer config={revenueChartConfig} className="h-[240px] w-full">
                             <AreaChart data={monthlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                 <defs>
@@ -363,12 +363,12 @@ export default function AdminDashboardPage() {
                 </Card>
 
                 {/* Order Status Pie Chart */}
-                <Card className="border border-stone-100 bg-white shadow-sm rounded-2xl">
-                    <CardHeader className="px-6 pt-6 pb-2">
+                <div className="border border-stone-100 bg-white shadow-sm rounded-2xl">
+                    <div className="px-6">
                         <CardTitle className="text-base font-bold text-stone-800">Order Status</CardTitle>
                         <p className="text-xs text-stone-400 mt-0.5">All-time breakdown · 1,348 total</p>
-                    </CardHeader>
-                    <CardContent className="px-6 pb-6 pt-2">
+                    </div>
+                    <div className="px-6">
                         <ChartContainer config={orderStatusConfig} className="h-[200px] w-full">
                             <PieChart>
                                 <Pie
@@ -403,8 +403,8 @@ export default function AdminDashboardPage() {
                                 );
                             })}
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             </div>
 
             {/* ── Charts Row 2: Weekly Product Bar + Top Products ── */}

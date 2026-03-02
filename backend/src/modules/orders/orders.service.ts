@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, Logger } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CartService } from '../cart/cart.service';
 import { PaymentService } from '../../providers/payment/payment.service';
@@ -6,6 +6,22 @@ import {
   DispatchManagerService,
   DispatchProviderType,
 } from '../../providers/dispatch/dispatch.service';
+
+export interface ShippingAddress {
+  fullName: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode?: string;
+}
+
+export interface CheckoutDto {
+  email: string;
+  dispatchType: DispatchProviderType;
+  shippingAddress: ShippingAddress;
+  note?: string;
+}
 
 @Injectable()
 export class OrdersService {
@@ -16,75 +32,136 @@ export class OrdersService {
     private readonly cartService: CartService,
     private readonly paymentService: PaymentService,
     private readonly dispatchManager: DispatchManagerService,
-  ) {}
+  ) { }
 
-  async checkout(
-    userId: string,
-    email: string,
-    dispatchType: DispatchProviderType,
-  ) {
+  async checkout(userId: string, dto: CheckoutDto) {
+    const { email, dispatchType, shippingAddress, note } = dto;
+
+    // 1. Get user's cart
     const cart = await this.cartService.getCart(userId);
-
     if (!cart || cart.items.length === 0) {
       throw new BadRequestException('Cart is empty. Cannot checkout.');
     }
 
-    // 1. Calculate Total (Ideally, verify prices against the database)
-    // For brevity, we assume 100 per unit
-    const subtotal = cart.items.reduce(
-      (sum, item) => sum + 100 * item.quantity,
-      0,
-    );
-
-    // 2. Calculate Shipping via Strategy
-    const dispatchProvider = this.dispatchManager.getProvider(dispatchType);
-    const shipping = await dispatchProvider.calculateShipping(
-      'Warehouse A',
-      'Customer Address',
-      5,
-    );
-
-    const finalAmount = subtotal + shipping;
-
-    // 3. Create Pending Order in Postgres Transaction
-    const order = await this.prisma.order.create({
-      data: {
-        userId,
-        totalAmount: finalAmount,
-        status: 'PENDING',
-        dispatchProvider: dispatchType,
-        items: {
-          create: cart.items.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: 100, // Example: locked price
-          })),
-        },
-      },
+    // 2. Validate and fetch real product prices from DB
+    const productIds = cart.items.map((i) => i.productId);
+    const products = await this.prisma.product.findMany({
+      where: { id: { in: productIds } },
     });
 
-    // 4. Initialize Payment
+    // Ensure all products exist
+    const productMap = new Map(products.map((p) => [p.id, p]));
+    for (const item of cart.items) {
+      if (!productMap.has(item.productId)) {
+        throw new NotFoundException(
+          `Product ${item.productId} no longer exists.`,
+        );
+      }
+      const product = productMap.get(item.productId)!;
+      if (product.stock < item.quantity) {
+        throw new BadRequestException(
+          `Insufficient stock for "${product.name}". Available: ${product.stock}.`,
+        );
+      }
+    }
+
+    // 3. Calculate subtotal using real DB prices
+    const subtotal = cart.items.reduce((sum, item) => {
+      const product = productMap.get(item.productId)!;
+      return sum + product.price * item.quantity;
+    }, 0);
+
+    // 4. Calculate shipping cost
+    const dispatchProvider = this.dispatchManager.getProvider(dispatchType);
+    const shippingCost = await dispatchProvider.calculateShipping(
+      'Tosi Farms Warehouse, Ogun State',
+      `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}`,
+      cart.items.reduce((sum, i) => sum + i.quantity, 0),
+    );
+
+    const finalAmount = subtotal + shippingCost;
+
+    // 5. Create Pending Order in a Postgres Transaction
+    const order = await this.prisma.$transaction(async (tx) => {
+      // Decrement stock atomically
+      for (const item of cart.items) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { stock: { decrement: item.quantity } },
+        });
+      }
+
+      return tx.order.create({
+        data: {
+          userId,
+          totalAmount: finalAmount,
+          status: 'PENDING',
+          dispatchProvider: dispatchType,
+          shippingAddress: JSON.stringify(shippingAddress),
+          customerNote: note,
+          items: {
+            create: cart.items.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              price: productMap.get(item.productId)!.price,
+            })),
+          },
+        },
+        include: {
+          items: { include: { product: true } },
+        },
+      });
+    });
+
+    // 6. Initialize Payment
     const paymentUrl = await this.paymentService.initializePayment(
       email,
       finalAmount,
       order.id,
     );
 
-    // 5. Clear the Cache (Optional: Clear after confirmed payment webhook instead)
+    // 7. Clear cart after successful order creation
     await this.cartService.clearCart(userId);
+
+    this.logger.log(`Order ${order.id} created for user ${userId} — ₦${finalAmount}`);
 
     return {
       orderId: order.id,
       amount: finalAmount,
+      shipping: shippingCost,
+      subtotal,
       currency: 'NGN',
       paymentUrl,
+      itemCount: cart.items.length,
     };
+  }
+
+  async getMyOrders(userId: string) {
+    return this.prisma.order.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        items: {
+          include: { product: { select: { id: true, name: true, images: true } } },
+        },
+      },
+    });
+  }
+
+  async getOrderById(orderId: string, userId: string) {
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId, userId },
+      include: {
+        items: { include: { product: true } },
+      },
+    });
+    if (!order) throw new NotFoundException(`Order ${orderId} not found.`);
+    return order;
   }
 
   async processWebhook(event: string, payload: any) {
     if (event === 'charge.success') {
       const orderId = payload.data.reference;
-
       this.logger.log(`Payment confirmed for Order ${orderId}`);
 
       const order = await this.prisma.order.update({
@@ -92,27 +169,22 @@ export class OrdersService {
         data: { status: 'PAID', paymentReference: payload.data.id.toString() },
       });
 
-      // Trigger Dispatch
+      // Trigger dispatch
       const provider = this.dispatchManager.getProvider(
         order.dispatchProvider as DispatchProviderType,
       );
       const trackingNo = await provider.createShipment(
         order.id,
-        'Warehouse A',
-        'Customer Addr',
+        'Tosi Farms Warehouse, Ogun State',
+        order.shippingAddress || 'Customer Address',
       );
 
       await this.prisma.order.update({
         where: { id: order.id },
-        data: {
-          status: 'SHIPPED',
-          trackingNumber: trackingNo,
-        },
+        data: { status: 'SHIPPED', trackingNumber: trackingNo },
       });
 
-      this.logger.log(
-        `Order ${orderId} marked SHIPPED with Tracking: ${trackingNo}`,
-      );
+      this.logger.log(`Order ${orderId} marked SHIPPED. Tracking: ${trackingNo}`);
     }
   }
 }
