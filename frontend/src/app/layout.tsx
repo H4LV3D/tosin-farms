@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, Lora } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/lib/QueryProvider";
+import { Toaster } from "react-hot-toast";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -30,6 +31,20 @@ export default function RootLayout({
         className={`${dmSans.variable} ${lora.variable} font-sans antialiased text-earth bg-cream selection:bg-amber-800 selection:text-amber-100`}
       >
         <QueryProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                fontFamily: "var(--font-dm-sans)",
+                fontSize: "14px",
+                borderRadius: "8px",
+              },
+              success: {
+                iconTheme: { primary: "#b45309", secondary: "#fff" },
+              },
+            }}
+          />
           <main>{children}</main>
         </QueryProvider>
       </body>

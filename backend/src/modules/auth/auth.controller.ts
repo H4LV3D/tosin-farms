@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 import { AuthService } from './auth.service';
 import type { Request } from 'express';
 
@@ -13,9 +13,28 @@ class LoginDto {
   password: string;
 }
 
+class RegisterDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsEmail({}, { message: 'A valid email address is required' })
+  email: string;
+
+  @IsString()
+  @MinLength(6, { message: 'Password must be at least 6 characters' })
+  password: string;
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
+
+  // ─── Email / Password Register ──────────────────────────────────────────────
+  @Post('register')
+  async register(@Body() body: RegisterDto) {
+    return this.authService.register(body.email, body.password, body.name);
+  }
 
   // ─── Email / Password Login ───────────────────────────────────────────────
   @Post('login')
