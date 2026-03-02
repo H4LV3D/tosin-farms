@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,6 +19,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Loader2 } from "lucide-react";
+import appAxios from "@/config/axios";
 
 const registerSchema = z.object({
   fullName: z.string().min(2, "Full name is required."),
@@ -25,7 +30,22 @@ const registerSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
+async function registerUser(data: RegisterFormValues) {
+  const res = await appAxios.post<{
+    token: string;
+    role: string;
+    email: string;
+  }>("/auth/register", {
+    name: data.fullName,
+    email: data.email,
+    password: data.password,
+  });
+  return res.data;
+}
+
 export default function RegisterPage() {
+  const router = useRouter();
+
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -35,14 +55,40 @@ export default function RegisterPage() {
     },
   });
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: registerUser,
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("email", data.email);
+
+      document.cookie = `auth_token=${data.token}; path=/; SameSite=Lax; max-age=86400`;
+
+      toast.success("Account created! Welcome to Tosi Farms 🌿");
+
+      setTimeout(() => {
+        if (data.role === "ADMIN") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/");
+        }
+      }, 800);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (err: any) => {
+      const message =
+        err?.response?.data?.message ||
+        "Something went wrong. Please try again.";
+      toast.error(message);
+    },
+  });
+
   function onSubmit(data: RegisterFormValues) {
-    // Add custom credential register later
-    console.log("Credentials register:", data);
+    mutate(data);
   }
 
   const handleGoogleSignIn = () => {
-    // Connect to the Backend Auth Route
-    window.location.href = "http://localhost:9000/google";
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
 
   return (
@@ -125,9 +171,14 @@ export default function RegisterPage() {
             />
             <Button
               type="submit"
+              disabled={isPending}
               className="w-full h-12 bg-amber-700 hover:bg-amber-600 text-white font-bold tracking-widest uppercase transition-all"
             >
-              Create Account
+              {isPending ? (
+                <Loader2 className="animate-spin w-5 h-5" />
+              ) : (
+                "Create Account"
+              )}
             </Button>
           </form>
         </Form>

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -14,6 +15,21 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
   ) { }
+
+  // ─── Email / Password Register ──────────────────────────────────────────────
+  async register(email: string, password: string, name?: string) {
+    const existing = await this.prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      throw new ConflictException('An account with this email already exists.');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await this.prisma.user.create({
+      data: { email, name: name ?? email, password: hashedPassword },
+    });
+
+    return this.signToken(user.id, user.email, user.role);
+  }
 
   // ─── Email / Password Login ───────────────────────────────────────────────
   async login(email: string, password: string) {
