@@ -25,7 +25,7 @@ export default function ShopPage() {
     queryFn: () =>
       fetchProducts(
         activeCategory !== "all" ? activeCategory : undefined,
-        debouncedSearch || undefined
+        debouncedSearch || undefined,
       ),
     staleTime: 60 * 1000,
   });
@@ -37,7 +37,7 @@ export default function ShopPage() {
   return (
     <PageLayout>
       <main className="min-h-screen pt-28 pb-24 bg-cream">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
           {/* Page header */}
           <div className="mb-10">
             <span className="text-amber-700 text-xs font-bold uppercase tracking-widest mb-3 block">
@@ -46,10 +46,10 @@ export default function ShopPage() {
             <h1 className="font-display text-4xl lg:text-5xl font-semibold text-earth tracking-tight mb-3">
               Online Shop
             </h1>
-            <p className="text-stone-500 max-w-xl text-base leading-relaxed">
+            {/* <p className="text-stone-500 max-w-xl text-base leading-relaxed">
               Order fresh produce and processed goods directly from our farm to your
               doorstep. All products are grown and processed on our Ogun State farm.
-            </p>
+            </p> */}
           </div>
 
           {/* Filters */}

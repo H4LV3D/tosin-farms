@@ -4,48 +4,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { CartButton } from "@/components/shop/CartButton";
+import BrandLogo from "../shared/brandLogo/brandLogo";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4">
-      <div className="absolute inset-0 bg-[#fdf8f0]/90 backdrop-blur-md"></div>
-      <div className="relative max-w-screen-xl mx-auto px-6 lg:px-10 flex items-center justify-between">
+      <div className="absolute inset-0 bg-cream/90 backdrop-blur-md"></div>
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="16" cy="16" r="15" stroke="#b45309" strokeWidth="1.5" />
-            <path
-              d="M16 24 C16 24 9 18 9 12 A7 7 0 0 1 23 12 C23 18 16 24 16 24Z"
-              stroke="#b45309"
-              strokeWidth="1.5"
-              fill="none"
-            />
-            <path
-              d="M16 14 L16 24"
-              stroke="#b45309"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-            <path
-              d="M13 17 L16 14 L19 17"
-              stroke="#b45309"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span className="font-display font-bold text-[#1c1917] text-lg tracking-tight">
-            Tosi Farms
-          </span>
-        </Link>
+        <BrandLogo />
 
         {/* Nav */}
         <nav className="hidden lg:flex items-center gap-8">
@@ -90,7 +59,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-[#fdf8f0] border-b border-amber-200/60 shadow-lg py-6 px-6 space-y-4">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-cream border-b border-amber-200/60 shadow-lg py-6 px-6 space-y-4">
           <Link
             onClick={() => setIsMobileMenuOpen(false)}
             href="/shop"
