@@ -1,18 +1,22 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 
+interface PageLayoutProps {
+  children: React.ReactNode;
+  isHomePage?: boolean;
+}
+
 export default function PageLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    return (
-        <>
-            <Header />
-            <CartDrawer />
-            {children}
-            <Footer />
-        </>
-    );
+  children,
+  isHomePage = false,
+}: PageLayoutProps) {
+  return (
+    <>
+      <Header isHomePage={isHomePage} />
+      <CartDrawer />
+      {children}
+      <Footer />
+    </>
+  );
 }

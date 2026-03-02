@@ -1,20 +1,22 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#1c1917] pt-20">
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1591086765234-f1f51b30f4a3?w=1920&q=80"
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
+      <div className="absolute inset-0 z-10 h-screen w-full">
+        <Image
+          src="https://images.unsplash.com/photo-1507662228758-08d030c4820b?q=80&w=3432&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Lush green farmland"
-          className="w-full h-full object-cover opacity-50"
+          className=""
+          fill
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1c1917]/95 via-[#1c1917]/60 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1c1917] via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-[#1c1917]/95 via-[#1c1917]/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-[#1c1917] via-transparent to-transparent"></div>
       </div>
 
-      <div className="relative z-10 max-w-screen-xl mx-auto px-6 lg:px-10 w-full py-24">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full py-24">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           <div className="lg:col-span-7">
             <div className="reveal inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-bold uppercase tracking-widest mb-8">
@@ -96,12 +98,13 @@ export function Hero() {
 
           <div className="lg:col-span-5 hidden lg:block">
             <figure className="reveal relative h-[68vh] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 group">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1607305387299-a3d9611cd469?w=900&q=80"
                 alt="Freshly harvested cassava roots"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                fill
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1c1917]/80 via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-[#1c1917]/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-8 left-8 right-8">
                 <span className="px-2 py-1 bg-white/10 backdrop-blur rounded text-[10px] text-white font-bold uppercase tracking-widest border border-white/10 inline-block mb-3">
                   Freshly Harvested

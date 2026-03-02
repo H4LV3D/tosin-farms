@@ -129,10 +129,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/login"
+                  href="/about"
                   className="hover:text-amber-400 transition-colors"
                 >
-                  Customer Login
+                  About Us
                 </Link>
               </li>
             </ul>
@@ -146,6 +146,14 @@ export function Footer() {
               <li>📍 Off Farm Road, Local Gov, State.</li>
               <li>📞 +234 000 000 0000</li>
               <li>✉️ hello@tosifarms.com</li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="hover:text-amber-400 transition-colors inline-block mt-2"
+                >
+                  Send us a message →
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -153,11 +161,17 @@ export function Footer() {
         <div className="pt-8 border-t border-white/5 text-center text-xs text-stone-500 flex flex-col sm:flex-row items-center justify-between">
           <p>© {new Date().getFullYear()} Tosi Farms. All rights reserved.</p>
           <div className="flex items-center gap-4 mt-4 sm:mt-0">
-            <Link href="#" className="hover:text-amber-400 transition-colors">
-              Terms
+            <Link
+              href="/terms"
+              className="hover:text-amber-400 transition-colors"
+            >
+              Terms & Conditions
             </Link>
-            <Link href="#" className="hover:text-amber-400 transition-colors">
-              Privacy
+            <Link
+              href="/privacy"
+              className="hover:text-amber-400 transition-colors"
+            >
+              Privacy Policy
             </Link>
           </div>
         </div>
