@@ -25,6 +25,7 @@ import {
   ShippingAddress,
 } from "@/lib/api";
 import { useStore } from "@/store";
+import { useCartStore } from "@/store/cart.store";
 import { AddressForm, AddressFormData } from "./AddressForm";
 
 const contactSchema = z.object({
@@ -56,6 +57,7 @@ export function ShippingStep({
 }: ShippingStepProps) {
   const user = useStore((s) => s.user);
   const isAuthenticated = useStore((s) => s.isAuthenticated);
+  const cartItems = useCartStore((s) => s.items);
 
   // Form for contact details
   const {
@@ -133,7 +135,11 @@ export function ShippingStep({
           state: selectedAddress.state,
           zipCode: selectedAddress.zipCode || undefined,
         };
-        const rates = await fetchShippingOptions(payload);
+        const itemsPayload = cartItems.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+        }));
+        const rates = await fetchShippingOptions(payload, itemsPayload);
         setShippingOptions(rates);
 
         // Auto-select cheapest if nothing selected yet or current selection not returned
@@ -153,7 +159,7 @@ export function ShippingStep({
     };
 
     loadRates();
-  }, [selectedAddressId, addresses, selectedDispatch]);
+  }, [selectedAddressId, addresses, selectedDispatch, cartItems]);
 
   const handleAddAddress = async (data: AddressFormData) => {
     setIsSubmittingAddress(true);
@@ -186,14 +192,14 @@ export function ShippingStep({
   };
 
   const onSubmit = (contactData: ContactFormData) => {
-    if (!selectedAddressId) {
-      alert("Please select or add a delivery address.");
-      return;
-    }
-    if (!selectedDispatch) {
-      alert("Please select a delivery method.");
-      return;
-    }
+    // if (!selectedAddressId) {
+    //   alert("Please select or add a delivery address.");
+    //   return;
+    // }
+    // if (!selectedDispatch) {
+    //   alert("Please select a delivery method.");
+    //   return;
+    // }
 
     const address = addresses.find((a) => a.id === selectedAddressId)!;
     const selectedOption = shippingOptions.find(
@@ -324,10 +330,11 @@ export function ShippingStep({
                 <Plus className="w-3 h-3 mr-1" /> Add New
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+
+            <DialogContent className="sm:max-w-md bg-white">
               <DialogHeader>
-                <DialogTitle className="font-display font-semibold text-xl">
-                  Add New Address
+                <DialogTitle className="font-lato font-semibold text-xl">
+                  Add Shipping Address
                 </DialogTitle>
               </DialogHeader>
               <div className="pt-4">

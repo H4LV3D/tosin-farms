@@ -26,6 +26,7 @@ export interface CheckoutDto {
   dispatchType: DispatchProviderType;
   shippingAddress: ShippingAddress;
   note?: string;
+  items?: { productId: string; quantity: number }[];
 }
 
 @Injectable()
@@ -40,23 +41,27 @@ export class OrdersService {
   ) {}
 
   async checkout(userId: string, dto: CheckoutDto) {
-    const { email, dispatchType, shippingAddress, note } = dto;
+    const { email, dispatchType, shippingAddress, note, items } = dto;
 
-    // 1. Get user's cart
-    const cart = await this.cartService.getCart(userId);
-    if (!cart || cart.items.length === 0) {
-      throw new BadRequestException('Cart is empty. Cannot checkout.');
+    // 1. Get user's cart or use items from payload
+    let cartItems = items;
+    if (!cartItems || cartItems.length === 0) {
+      const cart = await this.cartService.getCart(userId);
+      if (!cart || cart.items.length === 0) {
+        throw new BadRequestException('Cart is empty. Cannot checkout.');
+      }
+      cartItems = cart.items;
     }
 
     // 2. Validate and fetch real product prices from DB
-    const productIds = cart.items.map((i) => i.productId);
+    const productIds = cartItems.map((i) => i.productId);
     const products = await this.prisma.product.findMany({
       where: { id: { in: productIds } },
     });
 
     // Ensure all products exist
     const productMap = new Map(products.map((p) => [p.id, p]));
-    for (const item of cart.items) {
+    for (const item of cartItems) {
       if (!productMap.has(item.productId)) {
         throw new NotFoundException(
           `Product ${item.productId} no longer exists.`,
@@ -71,7 +76,7 @@ export class OrdersService {
     }
 
     // 3. Calculate subtotal using real DB prices
-    const subtotal = cart.items.reduce((sum, item) => {
+    const subtotal = cartItems.reduce((sum, item) => {
       const product = productMap.get(item.productId)!;
       return sum + product.price * item.quantity;
     }, 0);
@@ -81,7 +86,7 @@ export class OrdersService {
     const shippingCost = await dispatchProvider.calculateShipping(
       'Tosi Farms Warehouse, Ogun State',
       `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}`,
-      cart.items.reduce((sum, i) => sum + i.quantity, 0),
+      cartItems.reduce((sum, i) => sum + i.quantity, 0),
     );
 
     const finalAmount = subtotal + shippingCost;
@@ -89,7 +94,7 @@ export class OrdersService {
     // 5. Create Pending Order in a Postgres Transaction
     const order = await this.prisma.$transaction(async (tx) => {
       // Decrement stock atomically
-      for (const item of cart.items) {
+      for (const item of cartItems) {
         await tx.product.update({
           where: { id: item.productId },
           data: { stock: { decrement: item.quantity } },
@@ -105,7 +110,7 @@ export class OrdersService {
           shippingAddress: JSON.stringify(shippingAddress),
           customerNote: note,
           items: {
-            create: cart.items.map((item) => ({
+            create: cartItems.map((item) => ({
               productId: item.productId,
               quantity: item.quantity,
               price: productMap.get(item.productId)!.price,
@@ -139,16 +144,25 @@ export class OrdersService {
       subtotal,
       currency: 'NGN',
       paymentUrl,
-      itemCount: cart.items.length,
+      itemCount: cartItems.length,
     };
   }
 
-  async getShippingOptions(userId: string, shippingAddress: ShippingAddress) {
-    const cart = await this.cartService.getCart(userId);
-    if (!cart || cart.items.length === 0) {
-      throw new BadRequestException('Cart is empty.');
+  async getShippingOptions(
+    userId: string,
+    shippingAddress: ShippingAddress,
+    items?: { productId: string; quantity: number }[],
+  ) {
+    let weight = 0;
+    if (items && items.length > 0) {
+      weight = items.reduce((sum, item) => sum + item.quantity, 0);
+    } else {
+      const cart = await this.cartService.getCart(userId);
+      if (!cart || cart.items.length === 0) {
+        throw new BadRequestException('Cart is empty.');
+      }
+      weight = cart.items.reduce((sum, item) => sum + item.quantity, 0);
     }
-    const weight = cart.items.reduce((sum, item) => sum + item.quantity, 0);
 
     const destination = `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}`;
     const origin = 'Tosi Farms Warehouse, Ogun State';

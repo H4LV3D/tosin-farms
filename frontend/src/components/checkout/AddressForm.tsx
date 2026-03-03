@@ -96,7 +96,7 @@ export function AddressForm({
             {...register("street")}
             placeholder="12 Adeola Odeku Street"
             className={cn(
-              "h-11 rounded-xl border-stone-200 bg-white",
+              "h-11 rounded-lg border-stone-200 bg-white",
               errors.street && "border-red-400",
             )}
           />
@@ -118,7 +118,7 @@ export function AddressForm({
               {...register("city")}
               placeholder="Lagos"
               className={cn(
-                "h-11 rounded-xl border-stone-200 bg-white",
+                "h-11 rounded-lg border-stone-200 bg-white",
                 errors.city && "border-red-400",
               )}
             />
@@ -138,7 +138,7 @@ export function AddressForm({
               id="state"
               {...register("state")}
               className={cn(
-                "w-full h-11 px-3 rounded-xl border border-stone-200 bg-white text-sm text-[#1c1917]",
+                "w-full h-11 px-3 rounded-lg border border-stone-200 bg-white text-sm text-[#1c1917]",
                 "focus:outline-none focus:ring-2 focus:ring-amber-500/50",
                 errors.state ? "border-red-400" : "",
               )}
@@ -169,7 +169,7 @@ export function AddressForm({
             id="zipCode"
             {...register("zipCode")}
             placeholder="100001"
-            className="h-11 rounded-xl border-stone-200 bg-white"
+            className="h-11 rounded-lg border-stone-200 bg-white"
           />
         </div>
 
@@ -196,7 +196,7 @@ export function AddressForm({
             variant="outline"
             onClick={onCancel}
             disabled={isLoading}
-            className="flex-1 h-11 border-stone-200 text-stone-600 hover:bg-stone-50 rounded-xl text-xs font-bold uppercase tracking-widest"
+            className="flex-1 h-11 border-stone-200 text-stone-600 hover:bg-stone-50 rounded-lg text-xs font-bold uppercase tracking-widest"
           >
             Cancel
           </Button>
@@ -204,7 +204,7 @@ export function AddressForm({
         <Button
           type="submit"
           disabled={isLoading}
-          className="flex-2 h-11 bg-amber-700 hover:bg-amber-600 text-white font-bold text-xs uppercase tracking-widest rounded-xl shadow-lg shadow-amber-900/20"
+          className="flex-2 h-11 bg-amber-700 hover:bg-amber-600 text-white font-bold text-xs uppercase tracking-widest rounded-lg shadow-lg shadow-amber-900/20"
         >
           {isLoading ? "Saving..." : "Save Address"}
         </Button>

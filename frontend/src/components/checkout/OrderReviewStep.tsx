@@ -45,6 +45,10 @@ export function OrderReviewStep({
           zipCode: shippingData.zipCode,
         },
         note: shippingData.note,
+        items: items.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+        })),
       });
 
       clearCart();

@@ -40,6 +40,7 @@ export interface CheckoutPayload {
   dispatchType: "DHL" | "FEDEX" | "GIG";
   shippingAddress: ShippingAddress;
   note?: string;
+  items?: { productId: string; quantity: number }[];
 }
 
 export interface CheckoutResult {
@@ -193,10 +194,11 @@ export async function fetchOrder(id: string): Promise<Order> {
 
 export async function fetchShippingOptions(
   shippingAddress: ShippingAddress,
+  items?: { productId: string; quantity: number }[],
 ): Promise<ShippingOption[]> {
   const res = await apiClient.post<ShippingOption[]>(
     "/orders/shipping-options",
-    { shippingAddress },
+    { shippingAddress, items },
   );
   return res.data;
 }

@@ -18,9 +18,16 @@ import {
   IsEmail,
   IsIn,
   IsOptional,
+  IsInt,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+
+class CartItemDto {
+  @IsString() @IsNotEmpty() productId: string;
+  @IsInt() @Min(1) quantity: number;
+}
 
 class ShippingAddressDto {
   @IsString() @IsNotEmpty() fullName: string;
@@ -38,6 +45,11 @@ class CheckoutBodyDto {
   @Type(() => ShippingAddressDto)
   shippingAddress: ShippingAddressDto;
   @IsString() @IsOptional() note?: string;
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CartItemDto)
+  items?: CartItemDto[];
 }
 
 @Controller('orders')
@@ -58,6 +70,7 @@ export class OrdersController {
       dispatchType: body.dispatchType,
       shippingAddress: body.shippingAddress,
       note: body.note,
+      items: body.items,
     };
     return this.ordersService.checkout(req.user.userId, dto);
   }
@@ -67,6 +80,7 @@ export class OrdersController {
   async getShippingOptions(
     @Req() req: { user: { userId: string } },
     @Body('shippingAddress') shippingAddress: ShippingAddressDto,
+    @Body('items') items?: CartItemDto[],
   ) {
     if (!shippingAddress) {
       throw new BadRequestException('shippingAddress is required');
@@ -74,6 +88,7 @@ export class OrdersController {
     return this.ordersService.getShippingOptions(
       req.user.userId,
       shippingAddress,
+      items,
     );
   }
 
