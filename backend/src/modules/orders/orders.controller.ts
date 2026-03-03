@@ -33,7 +33,7 @@ class ShippingAddressDto {
 
 class CheckoutBodyDto {
   @IsEmail() email: string;
-  @IsIn(['DHL', 'FEDEX']) dispatchType: 'DHL' | 'FEDEX';
+  @IsIn(['DHL', 'FEDEX', 'GIG']) dispatchType: 'DHL' | 'FEDEX' | 'GIG';
   @ValidateNested()
   @Type(() => ShippingAddressDto)
   shippingAddress: ShippingAddressDto;
@@ -49,10 +49,13 @@ export class OrdersController {
 
   @UseGuards(JwtAuthGuard)
   @Post('checkout')
-  async checkout(@Req() req: any, @Body() body: CheckoutBodyDto) {
+  async checkout(
+    @Req() req: { user: { userId: string } },
+    @Body() body: CheckoutBodyDto,
+  ) {
     const dto: CheckoutDto = {
       email: body.email,
-      dispatchType: body.dispatchType as any,
+      dispatchType: body.dispatchType,
       shippingAddress: body.shippingAddress,
       note: body.note,
     };
@@ -60,23 +63,48 @@ export class OrdersController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('shipping-options')
+  async getShippingOptions(
+    @Req() req: { user: { userId: string } },
+    @Body('shippingAddress') shippingAddress: ShippingAddressDto,
+  ) {
+    if (!shippingAddress) {
+      throw new BadRequestException('shippingAddress is required');
+    }
+    return this.ordersService.getShippingOptions(
+      req.user.userId,
+      shippingAddress,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async getMyOrders(@Req() req: any) {
+  async getMyOrders(@Req() req: { user: { userId: string } }) {
     return this.ordersService.getMyOrders(req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getOrder(@Req() req: any, @Param('id') id: string) {
+  async getOrder(
+    @Req() req: { user: { userId: string } },
+    @Param('id') id: string,
+  ) {
     return this.ordersService.getOrderById(id, req.user.userId);
   }
 
   @Post('webhook/paystack')
   async handlePaystackWebhook(
     @Headers('x-paystack-signature') signature: string,
-    @Body() payload: any,
+    @Body()
+    payload: {
+      event: string;
+      data: { reference: string; id: number | string };
+      [key: string]: unknown;
+    },
   ) {
-    if (!this.paymentService.verifyWebhookSignature(signature, payload)) {
+    if (
+      !this.paymentService.verifyWebhookSignature(signature, payload as any)
+    ) {
       throw new BadRequestException('Invalid webhook signature');
     }
     if (payload.event === 'charge.success') {

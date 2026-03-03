@@ -10,13 +10,13 @@ import {
 import { OrderReviewStep } from "@/components/checkout/OrderReviewStep";
 import { OrderSuccess } from "@/components/checkout/OrderSuccess";
 import { useCartStore } from "@/store/cart.store";
-import { ShoppingBag, Lock } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 
 type CheckoutState =
   | { step: 1 }
   | { step: 2 }
-  | { step: 3; shipping: ShippingFormData }
+  | { step: 3; shipping: ShippingFormData; shippingCost: number }
   | { step: 4; orderId: string; paymentUrl: string };
 
 export default function CheckoutPage() {
@@ -28,24 +28,16 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen pt-24 pb-20 bg-cream">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        {/* ── Page Header ── */}
-        <div className="text-center mb-10">
-          <span className="text-amber-700 text-xs font-bold uppercase tracking-widest mb-3 block">
-            Tosi Farms
-          </span>
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 space-y-8">
+        <div className="text-start">
           <h1 className="font-display text-3xl lg:text-4xl font-semibold text-earth mb-2">
             Checkout
           </h1>
-          <div className="flex items-center justify-center gap-1.5 text-xs text-stone-400">
-            <Lock className="w-3 h-3" />
-            <span>Secured checkout powered by Paystack</span>
-          </div>
         </div>
 
         {/* ── Stepper (hidden on success) ── */}
         {state.step < 4 && (
-          <div className="mb-10">
+          <div className="">
             <CheckoutStepper currentStep={currentStep} />
           </div>
         )}
@@ -60,12 +52,15 @@ export default function CheckoutPage() {
             {state.step === 2 && (
               <ShippingStep
                 onBack={() => setState({ step: 1 })}
-                onContinue={(data) => setState({ step: 3, shipping: data })}
+                onContinue={(data, cost) =>
+                  setState({ step: 3, shipping: data, shippingCost: cost })
+                }
               />
             )}
-            {state.step === 3 && "shipping" in state && (
+            {state.step === 3 && "shippingCost" in state && (
               <OrderReviewStep
                 shippingData={state.shipping}
+                shippingCost={state.shippingCost}
                 onBack={() => setState({ step: 2 })}
                 onSuccess={(orderId, paymentUrl) =>
                   setState({ step: 4, orderId, paymentUrl })
@@ -147,15 +142,21 @@ export default function CheckoutPage() {
                 <div className="flex justify-between">
                   <span className="text-stone-500">Shipping</span>
                   <span className="text-stone-400 text-xs">
-                    {state.step >= 3 && "shipping" in state
-                      ? `₦${state.step === 3 ? (state.shipping.dispatchType === "DHL" ? "2,500" : "2,000") : "—"}`
+                    {state.step >= 3 && "shippingCost" in state
+                      ? `₦${state.shippingCost.toLocaleString()}`
                       : "At next step"}
                   </span>
                 </div>
                 <div className="border-t border-stone-100 pt-2 flex justify-between">
                   <span className="font-bold text-[#1c1917]">Total</span>
                   <span className="font-bold text-amber-700">
-                    ₦{totalPrice.toLocaleString()}
+                    ₦
+                    {(
+                      totalPrice +
+                      (state.step >= 3 && "shippingCost" in state
+                        ? state.shippingCost
+                        : 0)
+                    ).toLocaleString()}
                   </span>
                 </div>
               </div>

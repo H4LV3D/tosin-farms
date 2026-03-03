@@ -143,6 +143,47 @@ export class OrdersService {
     };
   }
 
+  async getShippingOptions(userId: string, shippingAddress: ShippingAddress) {
+    const cart = await this.cartService.getCart(userId);
+    if (!cart || cart.items.length === 0) {
+      throw new BadRequestException('Cart is empty.');
+    }
+    const weight = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+
+    const destination = `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}`;
+    const origin = 'Tosi Farms Warehouse, Ogun State';
+
+    const providers: DispatchProviderType[] = ['GIG', 'FEDEX', 'DHL'];
+    const options = await Promise.all(
+      providers.map(async (type) => {
+        const provider = this.dispatchManager.getProvider(type);
+        const cost = await provider.calculateShipping(
+          origin,
+          destination,
+          weight,
+        );
+        return {
+          id: type,
+          price: cost,
+          label:
+            type === 'DHL'
+              ? 'DHL Express'
+              : type === 'FEDEX'
+                ? 'FedEx'
+                : 'GIG Logistics',
+          desc:
+            type === 'DHL'
+              ? '2-4 business days'
+              : type === 'FEDEX'
+                ? '3-5 business days'
+                : '1-3 business days',
+        };
+      }),
+    );
+
+    return options.sort((a, b) => a.price - b.price); // Cheapest first
+  }
+
   async getMyOrders(userId: string) {
     return this.prisma.order.findMany({
       where: { userId },
@@ -168,14 +209,17 @@ export class OrdersService {
     return order;
   }
 
-  async processWebhook(event: string, payload: any) {
+  async processWebhook(
+    event: string,
+    payload: { data: { reference: string; id: number | string } },
+  ) {
     if (event === 'charge.success') {
-      const orderId = payload.data.reference;
+      const orderId = String(payload.data.reference);
       this.logger.log(`Payment confirmed for Order ${orderId}`);
 
       const order = await this.prisma.order.update({
         where: { id: orderId },
-        data: { status: 'PAID', paymentReference: payload.data.id.toString() },
+        data: { status: 'PAID', paymentReference: String(payload.data.id) },
       });
 
       // Trigger dispatch
@@ -185,6 +229,7 @@ export class OrdersService {
       const trackingNo = await provider.createShipment(
         order.id,
         'Tosi Farms Warehouse, Ogun State',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         order.shippingAddress || 'Customer Address',
       );
 
