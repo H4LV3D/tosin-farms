@@ -6,6 +6,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,7 @@ async function registerUser(data: RegisterFormValues) {
     token: string;
     role: string;
     email: string;
+    name?: string;
   }>("/auth/register", {
     name: data.fullName,
     email: data.email,
@@ -45,6 +47,7 @@ async function registerUser(data: RegisterFormValues) {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { setCredentials } = useAuth();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -58,11 +61,14 @@ export default function RegisterPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("email", data.email);
-
-      document.cookie = `auth_token=${data.token}; path=/; SameSite=Lax; max-age=86400`;
+      setCredentials(
+        {
+          email: data.email,
+          role: data.role,
+          name: data.name || form.getValues().fullName,
+        },
+        data.token,
+      );
 
       toast.success("Account created! Welcome to Tosi Farms 🌿");
 

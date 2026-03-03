@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { CartButton } from "@/components/shop/CartButton";
 import BrandLogo from "../shared/brandLogo/brandLogo";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
 
 interface HeaderProps {
   isHomePage?: boolean;
@@ -13,10 +20,9 @@ interface HeaderProps {
 export function Header({ isHomePage = false }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
-    if (!isHomePage) return;
-
     const handleScroll = () => {
       // Get the hero section height (approximately)
       const heroHeight = window.innerHeight * 0.8; // 80vh approximate
@@ -81,12 +87,57 @@ export function Header({ isHomePage = false }: HeaderProps) {
         <div className="flex items-center justify-end gap-2">
           <CartButton isDarkTheme={isDarkTheme} />
 
-          <Link
-            href="/login"
-            className="hidden sm:inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-full transition-all hover:scale-105"
-          >
-            Login / Sign Up
-          </Link>
+          {user ? (
+            <div className="hidden sm:flex items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-2 p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors outline-none cursor-pointer">
+                  <div className="bg-amber-100 p-1.5 rounded-full text-amber-700">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <span
+                    className={`text-sm font-semibold max-w-[100px] truncate ${
+                      isDarkTheme ? "text-stone-200" : "text-stone-700"
+                    }`}
+                  >
+                    {user.name}
+                  </span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-48 bg-cream border-amber-200"
+                >
+                  <DropdownMenuItem
+                    asChild
+                    className="cursor-pointer font-semibold text-stone-700 focus:bg-amber-100"
+                  >
+                    <Link
+                      href={
+                        user.role === "ADMIN" ? "/admin/dashboard" : "/profile"
+                      }
+                    >
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer font-semibold text-red-600 focus:bg-red-50 focus:text-red-700 mt-1"
+                    onClick={() => {
+                      logout();
+                      window.location.href = "/";
+                    }}
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="hidden sm:inline-flex items-center gap-2 bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-full transition-all hover:scale-105"
+            >
+              Login / Sign Up
+            </Link>
+          )}
 
           {/* Mobile hamburger */}
           <button
@@ -158,13 +209,47 @@ export function Header({ isHomePage = false }: HeaderProps) {
           >
             Contact Us
           </Link>
-          <Link
-            onClick={() => setIsMobileMenuOpen(false)}
-            href="/login"
-            className="block text-center bg-amber-700 text-white text-sm font-bold py-3 rounded-full mt-4"
-          >
-            Login / Sign Up
-          </Link>
+          {user ? (
+            <div className="pt-2 mt-4 border-t border-amber-200/60">
+              <div className="flex items-center gap-3 mb-4 mt-2">
+                <div className="bg-amber-100 p-2 rounded-full text-amber-700">
+                  <User className="w-5 h-5" />
+                </div>
+                <div className="overflow-hidden">
+                  <p className="font-bold text-stone-800 dark:text-stone-200 truncate pr-2">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-stone-500 truncate pr-2">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+              <Link
+                onClick={() => setIsMobileMenuOpen(false)}
+                href={user.role === "ADMIN" ? "/admin/dashboard" : "/profile"}
+                className="block text-sm font-semibold py-2 text-stone-700 dark:text-stone-300 mb-1"
+              >
+                Profile
+              </Link>
+              <button
+                onClick={() => {
+                  logout();
+                  window.location.href = "/";
+                }}
+                className="block w-full text-left text-sm font-semibold py-2 text-red-600"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link
+              onClick={() => setIsMobileMenuOpen(false)}
+              href="/login"
+              className="block text-center bg-amber-700 text-white text-sm font-bold py-3 rounded-full mt-4"
+            >
+              Login / Sign Up
+            </Link>
+          )}
         </div>
       )}
     </header>

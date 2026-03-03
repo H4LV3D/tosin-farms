@@ -6,6 +6,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -33,12 +35,14 @@ async function loginUser(data: LoginFormValues) {
     token: string;
     role: string;
     email: string;
+    name?: string;
   }>("/auth/login", data);
   return res.data;
 }
 
 export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { setCredentials } = useAuth();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -48,22 +52,46 @@ export default function LoginPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("email", data.email);
+      toast.success("Welcome back! Login successful.", {
+        style: {
+          background: "#fdf8f0",
+          color: "#292524",
+          border: "1px solid #b45309",
+        },
+        iconTheme: {
+          primary: "#b45309",
+          secondary: "#fdf8f0",
+        },
+      });
 
-      document.cookie = `auth_token=${data.token}; path=/; SameSite=Lax; max-age=86400`;
+      setCredentials(
+        { email: data.email, role: data.role, name: data.name || data.email },
+        data.token,
+      );
 
-      if (data.role === "ADMIN") {
-        window.location.href = "/admin/dashboard";
-      } else {
-        window.location.href = "/";
-      }
+      setTimeout(() => {
+        if (data.role === "ADMIN") {
+          window.location.href = "/admin/dashboard";
+        } else {
+          window.location.href = "/";
+        }
+      }, 1000);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => {
       const message =
         err?.response?.data?.message || "Invalid email or password.";
+      toast.error(message, {
+        style: {
+          background: "#fef2f2",
+          color: "#991b1b",
+          border: "1px solid #f87171",
+        },
+        iconTheme: {
+          primary: "#ef4444",
+          secondary: "#fff",
+        },
+      });
       setErrorMsg(message);
     },
   });
