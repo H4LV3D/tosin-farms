@@ -32,4 +32,4 @@ import { PrismaModule } from '../../prisma/prisma.module';
   providers: [AuthService, GoogleStrategy, JwtAuthStrategy],
   exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

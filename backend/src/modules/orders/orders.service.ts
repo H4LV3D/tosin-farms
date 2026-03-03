@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CartService } from '../cart/cart.service';
 import { PaymentService } from '../../providers/payment/payment.service';
@@ -32,7 +37,7 @@ export class OrdersService {
     private readonly cartService: CartService,
     private readonly paymentService: PaymentService,
     private readonly dispatchManager: DispatchManagerService,
-  ) { }
+  ) {}
 
   async checkout(userId: string, dto: CheckoutDto) {
     const { email, dispatchType, shippingAddress, note } = dto;
@@ -123,7 +128,9 @@ export class OrdersService {
     // 7. Clear cart after successful order creation
     await this.cartService.clearCart(userId);
 
-    this.logger.log(`Order ${order.id} created for user ${userId} — ₦${finalAmount}`);
+    this.logger.log(
+      `Order ${order.id} created for user ${userId} — ₦${finalAmount}`,
+    );
 
     return {
       orderId: order.id,
@@ -142,7 +149,9 @@ export class OrdersService {
       orderBy: { createdAt: 'desc' },
       include: {
         items: {
-          include: { product: { select: { id: true, name: true, images: true } } },
+          include: {
+            product: { select: { id: true, name: true, images: true } },
+          },
         },
       },
     });
@@ -184,7 +193,9 @@ export class OrdersService {
         data: { status: 'SHIPPED', trackingNumber: trackingNo },
       });
 
-      this.logger.log(`Order ${orderId} marked SHIPPED. Tracking: ${trackingNo}`);
+      this.logger.log(
+        `Order ${orderId} marked SHIPPED. Tracking: ${trackingNo}`,
+      );
     }
   }
 }

@@ -23,20 +23,14 @@ const adminNavItems = [
   { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
 ];
 
-export default function Sidebar({
-  userEmail,
-  role,
-}: {
-  userEmail: string;
-  role: string;
-}) {
+export default function Sidebar({ userEmail }: { userEmail: string }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const navItems =
-    role?.toUpperCase() !== "ADMIN" ? adminNavItems : userNavItems;
+    user?.role?.toUpperCase() === "ADMIN" ? adminNavItems : userNavItems;
 
   function handleLogout() {
     logout();
@@ -46,25 +40,27 @@ export default function Sidebar({
   return (
     <aside className="w-64 h-screen bg-[#1a1a0e] text-stone-200 flex flex-col shrink-0 shadow-xl">
       {/* Brand */}
-      <div className="px-6 py-7 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-amber-600 flex items-center justify-center shrink-0">
-            <Sprout className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <p className="font-bold text-white text-base leading-tight">
-              Tosi Farms
-            </p>
-            <p className="text-[11px] text-amber-400 font-medium tracking-widest uppercase">
-              Admin Panel
-            </p>
+      <Link href="/">
+        <div className="px-6 py-7 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-600 flex items-center justify-center shrink-0">
+              <Sprout className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="font-bold text-white text-base leading-tight">
+                Tosi Farms
+              </p>
+              <p className="text-[11px] text-amber-400 font-medium tracking-widest uppercase">
+                {user?.role?.toUpperCase()} Panel
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-5 space-y-1">
-        {adminNavItems.map(({ label, href, icon: Icon }) => {
+        {navItems.map(({ label, href, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
           return (
             <Link
@@ -94,6 +90,7 @@ export default function Sidebar({
             {userEmail}
           </p>
         </div>
+
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-stone-400 hover:bg-red-500/10 hover:text-red-400 transition-all"

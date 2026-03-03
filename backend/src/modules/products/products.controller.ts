@@ -1,15 +1,15 @@
 import {
-    Controller,
-    Get,
-    Post,
-    Patch,
-    Delete,
-    Body,
-    Param,
-    Query,
-    UseGuards,
-    HttpCode,
-    HttpStatus,
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
@@ -19,49 +19,49 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('products')
 export class ProductsController {
-    constructor(private readonly productsService: ProductsService) { }
+  constructor(private readonly productsService: ProductsService) {}
 
-    // ─── Public ────────────────────────────────────────────────────────────────
+  // ─── Public ────────────────────────────────────────────────────────────────
 
-    @Get()
-    findAll(
-        @Query('category') category?: string,
-        @Query('search') search?: string,
-    ) {
-        return this.productsService.findAll(category, search);
-    }
+  @Get()
+  findAll(
+    @Query('category') category?: string,
+    @Query('search') search?: string,
+  ) {
+    return this.productsService.findAll(category, search);
+  }
 
-    @Get('categories')
-    getCategories() {
-        return this.productsService.getCategories();
-    }
+  @Get('categories')
+  getCategories() {
+    return this.productsService.getCategories();
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.productsService.findOne(id);
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.productsService.findOne(id);
+  }
 
-    // ─── Admin only ────────────────────────────────────────────────────────────
+  // ─── Admin only ────────────────────────────────────────────────────────────
 
-    @Post()
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('ADMIN')
-    create(@Body() dto: CreateProductDto) {
-        return this.productsService.create(dto);
-    }
+  @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  create(@Body() dto: CreateProductDto) {
+    return this.productsService.create(dto);
+  }
 
-    @Patch(':id')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('ADMIN')
-    update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
-        return this.productsService.update(id, dto);
-    }
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
+    return this.productsService.update(id, dto);
+  }
 
-    @Delete(':id')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('ADMIN')
-    @HttpCode(HttpStatus.NO_CONTENT)
-    remove(@Param('id') id: string) {
-        return this.productsService.remove(id);
-    }
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id') id: string) {
+    return this.productsService.remove(id);
+  }
 }

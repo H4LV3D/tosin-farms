@@ -5,4 +5,4 @@ import { PaymentService } from './payment.service';
   providers: [PaymentService],
   exports: [PaymentService],
 })
-export class PaymentModule { }
+export class PaymentModule {}

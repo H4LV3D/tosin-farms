@@ -34,7 +34,9 @@ class ShippingAddressDto {
 class CheckoutBodyDto {
   @IsEmail() email: string;
   @IsIn(['DHL', 'FEDEX']) dispatchType: 'DHL' | 'FEDEX';
-  @ValidateNested() @Type(() => ShippingAddressDto) shippingAddress: ShippingAddressDto;
+  @ValidateNested()
+  @Type(() => ShippingAddressDto)
+  shippingAddress: ShippingAddressDto;
   @IsString() @IsOptional() note?: string;
 }
 
@@ -43,7 +45,7 @@ export class OrdersController {
   constructor(
     private readonly ordersService: OrdersService,
     private readonly paymentService: PaymentService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('checkout')
