@@ -192,14 +192,14 @@ export function ShippingStep({
   };
 
   const onSubmit = (contactData: ContactFormData) => {
-    // if (!selectedAddressId) {
-    //   alert("Please select or add a delivery address.");
-    //   return;
-    // }
-    // if (!selectedDispatch) {
-    //   alert("Please select a delivery method.");
-    //   return;
-    // }
+    if (!selectedAddressId) {
+      alert("Please select or add a delivery address.");
+      return;
+    }
+    if (!selectedDispatch) {
+      alert("Please select a delivery method.");
+      return;
+    }
 
     const address = addresses.find((a) => a.id === selectedAddressId)!;
     const selectedOption = shippingOptions.find(
