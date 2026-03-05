@@ -9,7 +9,7 @@ export default async function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const tokenCookie = cookieStore.get("auth_token");
+  const tokenCookie = cookieStore.get("refreshToken");
 
   if (!tokenCookie?.value) {
     redirect("/login");
@@ -23,7 +23,7 @@ export default async function AuthenticatedLayout({
 
   return (
     <div className="flex h-screen bg-[#f7f5f2]">
-      <Sidebar userEmail={payload.email} />
+      <Sidebar userEmail={payload.email} userName={payload.name} />
       <main className="flex-1 overflow-auto">{children}</main>
     </div>
   );

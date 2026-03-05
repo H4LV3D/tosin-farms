@@ -73,7 +73,7 @@ export default function LoginPage() {
         if (data.role === "ADMIN") {
           window.location.href = "/admin/dashboard";
         } else {
-          window.location.href = "/";
+          window.location.href = "/orders";
         }
       }, 1000);
     },

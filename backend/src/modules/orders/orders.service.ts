@@ -243,7 +243,7 @@ export class OrdersService {
       const trackingNo = await provider.createShipment(
         order.id,
         'Tosi Farms Warehouse, Ogun State',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
         order.shippingAddress || 'Customer Address',
       );
 

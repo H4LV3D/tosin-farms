@@ -61,6 +61,7 @@ export class AuthController {
       token: data.accessToken,
       role: data.role,
       email: data.email,
+      name: data.name,
     };
   }
 
@@ -77,13 +78,14 @@ export class AuthController {
       token: data.accessToken,
       role: data.role,
       email: data.email,
+      name: data.name,
     };
   }
 
   // ─── Google OAuth ─────────────────────────────────────────────────────────
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req: Request) {
+  async googleAuth() {
     // Initiates the Google OAuth2 login flow
   }
 
@@ -94,14 +96,17 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     // Note: If google redirect lands off-domain, additional configuration is needed
-    const data = await this.authService.validateOAuthLogin(req.user);
-    // @ts-ignore
+    const user = req.user as {
+      email: string;
+      displayName?: string;
+      googleId: string;
+    };
+    const data = await this.authService.validateOAuthLogin(user);
     this.setRefreshCookie(res, data.refreshToken);
 
     // Usually OAuth redirects to the frontend with an access token in URL
     // Here we'll just redirect to the frontend base path and let it fetch.
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    // @ts-ignore
     res.redirect(`${frontendUrl}?token=${data.accessToken}`);
   }
 
@@ -111,8 +116,9 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const refreshToken = req.cookies?.refreshToken;
-    const data = await this.authService.refreshTokens(refreshToken);
+    const cookies = req.cookies as Record<string, string> | undefined;
+    const refreshToken = cookies?.refreshToken;
+    const data = await this.authService.refreshTokens(refreshToken as string);
 
     // Rotate refresh token
     this.setRefreshCookie(res, data.refreshToken);
@@ -121,17 +127,18 @@ export class AuthController {
       token: data.accessToken,
       role: data.role,
       email: data.email,
+      name: data.name,
     };
   }
 
   // ─── Logout ───────────────────────────────────────────────────────────────
   @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response) {
+  logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('refreshToken', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // For cross-origin
-      path: '/api/auth',
+      path: '/',
     });
     return { success: true };
   }
@@ -142,7 +149,7 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Must be true when SameSite=None
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' required for cross-domain
-      path: '/api/auth', // Important: Limit cookie to auth routes
+      path: '/', // Changed to / so Next.js server actions / layouts can read it
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (matching JWT expiration)
     });
   }

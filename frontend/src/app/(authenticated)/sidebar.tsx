@@ -11,10 +11,12 @@ import {
   Sprout,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { User, MapPin } from "lucide-react";
 
 const userNavItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Orders", href: "/orders", icon: ShoppingCart },
+  { label: "Profile", href: "/profile", icon: User },
+  { label: "Address", href: "/address", icon: MapPin },
 ];
 
 const adminNavItems = [
@@ -23,7 +25,13 @@ const adminNavItems = [
   { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
 ];
 
-export default function Sidebar({ userEmail }: { userEmail: string }) {
+export default function Sidebar({
+  userEmail,
+  userName,
+}: {
+  userEmail: string;
+  userName?: string;
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -87,7 +95,7 @@ export default function Sidebar({ userEmail }: { userEmail: string }) {
             Signed in as
           </p>
           <p className="text-xs text-stone-300 mt-0.5 truncate font-medium">
-            {userEmail}
+            {userName || userEmail}
           </p>
         </div>
 

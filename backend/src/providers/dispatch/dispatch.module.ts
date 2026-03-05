@@ -13,4 +13,4 @@ import { GigDispatchStrategy } from './strategies/gig-dispatch.strategy';
   ],
   exports: [DispatchManagerService],
 })
-export class DispatchModule { }
+export class DispatchModule {}

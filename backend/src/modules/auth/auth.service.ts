@@ -30,7 +30,7 @@ export class AuthService {
       data: { email, name: name ?? email, password: hashedPassword },
     });
 
-    return this.signTokens(user.id, user.email, user.role);
+    return this.signTokens(user.id, user.email, user.role, user.name);
   }
 
   // ─── Email / Password Login ───────────────────────────────────────────────
@@ -46,25 +46,42 @@ export class AuthService {
     // We cast user here if password is normally omitted, but `findUnique` typically returns all
     // scalars unless specified otherwise. We'll use any to bypass strict type omitted-password issues,
     // or properly check if it exists in the type if Prisma schema omits it.
-    if (!user || !(user as any).password) {
+    const userWithPassword = user as unknown as {
+      password?: string;
+      name?: string | null;
+    };
+    if (!user || !userWithPassword.password) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordValid = await bcrypt.compare(
       password,
-      (user as any).password,
+      userWithPassword.password,
     );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.signTokens(user.id, user.email, user.role);
+    return this.signTokens(
+      user.id,
+      user.email,
+      user.role,
+      userWithPassword.name ?? null,
+    );
   }
 
   // ─── Google OAuth Login ───────────────────────────────────────────────────
-  async validateOAuthLogin(
-    user: any,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  async validateOAuthLogin(user: {
+    email: string;
+    displayName?: string;
+    googleId: string;
+  }): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    role: string;
+    email: string;
+    name: string;
+  }> {
     try {
       let dbUser = await this.prisma.user.findUnique({
         where: { email: user.email },
@@ -80,7 +97,7 @@ export class AuthService {
         });
       }
 
-      return this.signTokens(dbUser.id, dbUser.email, dbUser.role);
+      return this.signTokens(dbUser.id, dbUser.email, dbUser.role, dbUser.name);
     } catch {
       throw new InternalServerErrorException('Failed to validate OAuth login');
     }
@@ -93,7 +110,7 @@ export class AuthService {
     }
 
     try {
-      const payload = this.jwtService.verify(refreshToken, {
+      const payload = this.jwtService.verify<{ sub: string }>(refreshToken, {
         secret:
           this.configService.get<string>('JWT_REFRESH_SECRET') ||
           this.configService.get<string>('JWT_SECRET'),
@@ -106,15 +123,27 @@ export class AuthService {
         throw new UnauthorizedException('User not found');
       }
 
-      return this.signTokens(user.id, user.email, user.role);
+      return this.signTokens(user.id, user.email, user.role, user.name);
     } catch {
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
   }
 
   // ─── Helper ───────────────────────────────────────────────────────────────
-  private signTokens(id: string, email: string, role: string) {
-    const payload = { sub: id, email, role };
+  private signTokens(
+    id: string,
+    email: string,
+    role: string,
+    name: string | null,
+  ): {
+    accessToken: string;
+    refreshToken: string;
+    role: string;
+    email: string;
+    name: string;
+  } {
+    const payloadName = name || email;
+    const payload = { sub: id, email, role, name: payloadName };
 
     // Configurable secrets + fallbacks if not explicitly defined differently
     const accessSecret =
@@ -132,6 +161,6 @@ export class AuthService {
       expiresIn: '7d', // Long-lived refresh token
     });
 
-    return { accessToken, refreshToken, role, email };
+    return { accessToken, refreshToken, role, email, name: payloadName };
   }
 }
