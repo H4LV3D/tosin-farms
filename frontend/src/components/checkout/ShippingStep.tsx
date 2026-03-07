@@ -26,7 +26,7 @@ import {
 } from "@/lib/api";
 import { useStore } from "@/store";
 import { useCartStore } from "@/store/cart.store";
-import { AddressForm, AddressFormData } from "./AddressForm";
+import { AddressForm, AddressFormData } from "@/components/shared/AddressForm";
 
 const contactSchema = z.object({
   fullName: z.string().min(3, "Full name must be at least 3 characters"),

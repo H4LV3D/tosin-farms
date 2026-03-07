@@ -42,7 +42,7 @@ class RegisterDto {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   // ─── Email / Password Register ──────────────────────────────────────────────
   @Post('register')
@@ -58,6 +58,7 @@ export class AuthController {
     this.setRefreshCookie(res, data.refreshToken);
 
     return {
+      id: data.id,
       token: data.accessToken,
       role: data.role,
       email: data.email,
@@ -75,6 +76,7 @@ export class AuthController {
     this.setRefreshCookie(res, data.refreshToken);
 
     return {
+      id: data.id,
       token: data.accessToken,
       role: data.role,
       email: data.email,
@@ -124,6 +126,42 @@ export class AuthController {
     this.setRefreshCookie(res, data.refreshToken);
 
     return {
+      id: data.id,
+      token: data.accessToken,
+      role: data.role,
+      email: data.email,
+      name: data.name,
+    };
+  }
+
+  // ─── WebAuthn (Passkeys) ────────────────────────────────────────────────
+  @Get('passkey/register-options')
+  @UseGuards(AuthGuard('jwt')) // Ensure user is logged in to register a passkey
+  async getRegistrationOptions(@Req() req: any) {
+    return this.authService.getRegistrationOptions(req.user.userId || req.user.sub);
+  }
+
+  @Post('passkey/register-verify')
+  @UseGuards(AuthGuard('jwt'))
+  async verifyRegistration(@Req() req: any, @Body() body: any) {
+    return this.authService.verifyRegistration(req.user.userId || req.user.sub, body);
+  }
+
+  @Post('passkey/login-options')
+  async getAuthenticationOptions(@Body() body: { email?: string }) {
+    return this.authService.getAuthenticationOptions(body.email);
+  }
+
+  @Post('passkey/login-verify')
+  async verifyAuthentication(
+    @Body() body: { response: any; email?: string },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const data = await this.authService.verifyAuthentication(body.response, body.email);
+    this.setRefreshCookie(res, data.refreshToken);
+
+    return {
+      id: data.id,
       token: data.accessToken,
       role: data.role,
       email: data.email,

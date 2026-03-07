@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async getAddresses(userId: string) {
     return this.prisma.address.findMany({
@@ -63,5 +63,70 @@ export class UsersService {
     return this.prisma.address.delete({
       where: { id: addressId },
     });
+  }
+
+  async updateProfile(userId: string, data: any) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: data.name,
+        bio: data.bio,
+        avatarUrl: data.avatarUrl,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatarUrl: true,
+        bio: true,
+        role: true,
+      },
+    });
+  }
+
+  async getWishlist(userId: string) {
+    return this.prisma.wishlist.findMany({
+      where: { userId },
+      include: {
+        product: true,
+      },
+    });
+  }
+
+  async addToWishlist(userId: string, productId: string) {
+    return this.prisma.wishlist.upsert({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+      update: {},
+      create: {
+        userId,
+        productId,
+      },
+      include: {
+        product: true,
+      },
+    });
+  }
+
+  async removeFromWishlist(userId: string, productId: string) {
+    return this.prisma.wishlist.delete({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+  }
+
+  async getPasskeyStatus(userId: string) {
+    const count = await this.prisma.authenticator.count({
+      where: { userId },
+    });
+    return { hasPasskey: count > 0 };
   }
 }

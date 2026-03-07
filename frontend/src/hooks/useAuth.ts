@@ -8,12 +8,14 @@ export const useAuth = () => {
   const isAuthenticated = useStore((state) => state.isAuthenticated);
   const setCredentials = useStore((state) => state.setCredentials);
   const logout = useStore((state) => state.logout);
+  const updateUser = useStore((state) => state.updateUser);
 
   return {
     user,
     accessToken,
     isAuthenticated,
     setCredentials,
+    updateUser,
     logout,
   };
 };

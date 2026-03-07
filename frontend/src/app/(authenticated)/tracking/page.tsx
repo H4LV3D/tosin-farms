@@ -1,13 +1,23 @@
+"use client";
+
+import { AuthenticatedPageContainer, PageHeader, EmptyState } from "@/components/shared/AuthenticatedPageLayout";
+import { Truck } from "lucide-react";
+
 export default function TrackingPage() {
     return (
-        <div className="container mx-auto px-4 py-12">
-            <h1 className="text-3xl font-display font-semibold text-earth mb-6">
-                Order Tracking
-            </h1>
-            <p className="text-stone-600">
-                Track the status of your active shipments.
-            </p>
-            {/* Tracking component will go here */}
-        </div>
+        <AuthenticatedPageContainer maxWidth="5xl">
+            <PageHeader
+                title="Order Tracking"
+                description="Monitor the real-time status of your harvest deliveries."
+            />
+
+            <EmptyState
+                icon={Truck}
+                title="No active tracking"
+                description="You don't have any active deliveries at the moment. Your tracking history will appear here once an order is shipped."
+                actionLabel="View All Orders"
+                actionHref="/orders"
+            />
+        </AuthenticatedPageContainer>
     );
 }

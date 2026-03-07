@@ -1,7 +1,10 @@
 export interface AuthUser {
-  name: string;
+  id: string;
+  name: string | null;
   email: string;
   role: string;
+  avatarUrl?: string | null;
+  bio?: string | null;
 }
 
 export interface AuthSlice {
@@ -9,6 +12,7 @@ export interface AuthSlice {
   accessToken: string | null;
   isAuthenticated: boolean;
   setCredentials: (user: AuthUser, accessToken: string) => void;
+  updateUser: (user: Partial<AuthUser>) => void;
   logout: () => void;
 }
 
@@ -19,5 +23,9 @@ export const createAuthSlice = (set: any): AuthSlice => ({
   isAuthenticated: false,
   setCredentials: (user, accessToken) =>
     set({ user, accessToken, isAuthenticated: true }),
+  updateUser: (data) =>
+    set((state: any) => ({
+      user: state.user ? { ...state.user, ...data } : null,
+    })),
   logout: () => set({ user: null, accessToken: null, isAuthenticated: false }),
 });

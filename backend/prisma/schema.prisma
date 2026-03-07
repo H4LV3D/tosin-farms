@@ -11,16 +11,53 @@ datasource db {
 }
 
 model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  name           String?
+  avatarUrl      String?
+  bio            String?
+  password       String? // Hashed. Null for OAuth-only users
+  googleId       String?         @unique
+  role           Role            @default(USER)
+  orders         Order[]
+  wishlist       Wishlist[]
+  authenticators Authenticator[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  addresses      Address[]
+}
+
+model Authenticator {
+  id                   String   @id @default(uuid())
+  credentialID         String   @unique
+  credentialPublicKey  Bytes
+  counter              BigInt
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String[]
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PasskeyChallenge {
   id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  password  String?  // Hashed. Null for OAuth-only users
-  googleId  String?  @unique
-  role      Role     @default(USER)
-  orders    Order[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  addresses Address[]
+  userId    String   @unique
+  challenge String
+  createdAt DateTime @default(now())
+}
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
 }
 
 enum Role {
@@ -29,16 +66,17 @@ enum Role {
 }
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String      @id @default(uuid())
   name        String
   description String?
   price       Float
-  stock       Int      @default(0)
-  category    String?  // e.g. 'Grains', 'Cassava', 'Fruits'
+  stock       Int         @default(0)
+  category    String? // e.g. 'Grains', 'Cassava', 'Fruits'
   images      String[] // Array of image URLs
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   orderItems  OrderItem[]
+  wishlist    Wishlist[]
 }
 
 model Address {
@@ -61,9 +99,9 @@ model Order {
   status           OrderStatus @default(PENDING)
   totalAmount      Float
   paymentReference String?
-  dispatchProvider String?     // e.g., 'DHL', 'FEDEX'
+  dispatchProvider String? // e.g., 'DHL', 'FEDEX'
   trackingNumber   String?
-  shippingAddress  String?     // JSON-encoded ShippingAddress object
+  shippingAddress  String? // JSON-encoded ShippingAddress object
   customerNote     String?
   items            OrderItem[]
   createdAt        DateTime    @default(now())
@@ -85,5 +123,5 @@ model OrderItem {
   productId String
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
-  price     Float   // Price at the time of purchase
+  price     Float // Price at the time of purchase
 }

@@ -33,6 +33,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 async function registerUser(data: RegisterFormValues) {
   const res = await appAxios.post<{
+    id: string;
     token: string;
     role: string;
     email: string;
@@ -63,6 +64,7 @@ export default function RegisterPage() {
     onSuccess: (data) => {
       setCredentials(
         {
+          id: data.id,
           email: data.email,
           role: data.role,
           name: data.name || form.getValues().fullName,

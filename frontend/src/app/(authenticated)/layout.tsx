@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { decodeJwtPayload, isTokenExpired } from "@/lib/auth";
 import Sidebar from "./sidebar";
+import { PasskeyNudge } from "@/components/shared/PasskeyNudge";
 
 export default async function AuthenticatedLayout({
   children,
@@ -24,7 +25,10 @@ export default async function AuthenticatedLayout({
   return (
     <div className="flex h-screen bg-[#f7f5f2]">
       <Sidebar userEmail={payload.email} userName={payload.name} />
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main className="flex-1 overflow-auto">
+        {children}
+        <PasskeyNudge />
+      </main>
     </div>
   );
 }

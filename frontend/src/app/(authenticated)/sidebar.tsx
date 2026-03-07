@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Package,
   ShoppingCart,
+  Heart,
   LogOut,
   ChevronRight,
   Sprout,
@@ -15,8 +16,9 @@ import { User, MapPin } from "lucide-react";
 
 const userNavItems = [
   { label: "Orders", href: "/orders", icon: ShoppingCart },
-  { label: "Profile", href: "/profile", icon: User },
+  { label: "Wishlist", href: "/wishlist", icon: Heart },
   { label: "Address", href: "/address", icon: MapPin },
+  { label: "Profile", href: "/profile", icon: User },
 ];
 
 const adminNavItems = [
@@ -74,11 +76,10 @@ export default function Sidebar({
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all ${
-                active
-                  ? "bg-amber-600 text-white shadow-lg shadow-amber-900/40"
-                  : "text-stone-400 hover:bg-white/5 hover:text-white"
-              }`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all ${active
+                ? "bg-amber-600 text-white shadow-lg shadow-amber-900/40"
+                : "text-stone-400 hover:bg-white/5 hover:text-white"
+                }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
               <span className="flex-1">{label}</span>
@@ -90,14 +91,14 @@ export default function Sidebar({
 
       {/* Footer / user */}
       <div className="px-4 py-5 border-t border-white/10 space-y-3">
-        <div className="px-3 py-2.5 rounded-xl bg-white/5">
+        {/* <div className="px-3 py-2.5 rounded-xl bg-white/5">
           <p className="text-[10px] text-stone-500 uppercase tracking-widest font-bold">
             Signed in as
           </p>
           <p className="text-xs text-stone-300 mt-0.5 truncate font-medium">
             {userName || userEmail}
           </p>
-        </div>
+        </div> */}
 
         <button
           onClick={handleLogout}

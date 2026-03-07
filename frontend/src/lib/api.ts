@@ -72,6 +72,8 @@ export interface SavedAddress {
   state: string;
   zipCode?: string;
   isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ShippingOption {
@@ -203,6 +205,49 @@ export async function fetchShippingOptions(
   return res.data;
 }
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  name: string | null;
+  avatarUrl: string | null;
+  bio: string | null;
+  role: string;
+}
+
+export interface WishlistItem {
+  id: string;
+  productId: string;
+  product: Product;
+  createdAt: string;
+}
+
+// ─── Users & Profile ─────────────────────────────────────────────────────────
+
+export async function updateProfile(data: {
+  name?: string;
+  bio?: string;
+  avatarUrl?: string;
+}): Promise<UserProfile> {
+  const res = await apiClient.put<UserProfile>("/users/profile", data);
+  return res.data;
+}
+
+// ─── Wishlist ─────────────────────────────────────────────────────────────────
+
+export async function fetchWishlist(): Promise<WishlistItem[]> {
+  const res = await apiClient.get<WishlistItem[]>("/users/wishlist");
+  return res.data;
+}
+
+export async function addToWishlist(productId: string): Promise<WishlistItem> {
+  const res = await apiClient.post<WishlistItem>(`/users/wishlist/${productId}`);
+  return res.data;
+}
+
+export async function removeFromWishlist(productId: string): Promise<void> {
+  await apiClient.delete(`/users/wishlist/${productId}`);
+}
+
 // ─── Users & Addresses (authenticated) ────────────────────────────────────────
 
 export async function fetchUserAddresses(): Promise<SavedAddress[]> {
@@ -211,7 +256,7 @@ export async function fetchUserAddresses(): Promise<SavedAddress[]> {
 }
 
 export async function addUserAddress(
-  data: Omit<SavedAddress, "id">,
+  data: Omit<SavedAddress, "id" | "createdAt" | "updatedAt">,
 ): Promise<SavedAddress> {
   const res = await apiClient.post<SavedAddress>("/users/addresses", data);
   return res.data;
@@ -228,3 +273,54 @@ export async function updateUserAddress(
 export async function deleteUserAddress(id: string): Promise<void> {
   await apiClient.delete(`/users/addresses/${id}`);
 }
+// ─── Passkeys (WebAuthn) ───────────────────────────────────────────────────
+export interface PasskeyRegistrationOptions {
+  challenge: string;
+  rp: { name: string; id: string };
+  user: { id: string; name: string; displayName: string };
+  pubKeyCredParams: { type: string; alg: number }[];
+  authenticatorSelection?: any;
+  timeout?: number;
+  attestation?: string;
+  excludeCredentials?: any[];
+}
+
+export const getPasskeyRegistrationOptions = async () => {
+  const response = await apiClient.get<PasskeyRegistrationOptions>(
+    "/auth/passkey/register-options",
+  );
+  return response.data;
+};
+
+export const verifyPasskeyRegistration = async (body: any) => {
+  const response = await apiClient.post<{ verified: boolean }>(
+    "/auth/passkey/register-verify",
+    body,
+  );
+  return response.data;
+};
+
+export const getPasskeyLoginOptions = async (email?: string) => {
+  const response = await apiClient.post<any>("/auth/passkey/login-options", {
+    email,
+  });
+  return response.data;
+};
+
+export const verifyPasskeyLogin = async (response: any, email?: string) => {
+  const res = await apiClient.post<{
+    id: string;
+    token: string;
+    role: string;
+    email: string;
+    name: string;
+  }>("/auth/passkey/login-verify", { response, email });
+  return res.data;
+};
+
+export const fetchPasskeyStatus = async () => {
+  const response = await apiClient.get<{ hasPasskey: boolean }>(
+    "/users/passkey-status",
+  );
+  return response.data;
+};
