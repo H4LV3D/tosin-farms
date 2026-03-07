@@ -16,16 +16,28 @@ export interface AuthSlice {
   logout: () => void;
 }
 
+import Cookies from "js-cookie";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createAuthSlice = (set: any): AuthSlice => ({
   user: null,
   accessToken: null,
   isAuthenticated: false,
-  setCredentials: (user, accessToken) =>
-    set({ user, accessToken, isAuthenticated: true }),
+  setCredentials: (user, accessToken) => {
+    // Set cookie for server-side layout guards and axios interceptors
+    Cookies.set("auth_token", accessToken, {
+      expires: 7, // 7 days
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
+    set({ user, accessToken, isAuthenticated: true });
+  },
   updateUser: (data) =>
     set((state: any) => ({
       user: state.user ? { ...state.user, ...data } : null,
     })),
-  logout: () => set({ user: null, accessToken: null, isAuthenticated: false }),
+  logout: () => {
+    Cookies.remove("auth_token");
+    set({ user: null, accessToken: null, isAuthenticated: false });
+  },
 });

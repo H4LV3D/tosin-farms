@@ -11,6 +11,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { PromotionsModule } from './modules/promotions/promotions.module';
 import { DispatchModule } from './providers/dispatch/dispatch.module';
 import { PaymentModule } from './providers/payment/payment.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -24,8 +25,9 @@ import { PaymentModule } from './providers/payment/payment.module';
     PromotionsModule,
     DispatchModule,
     PaymentModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

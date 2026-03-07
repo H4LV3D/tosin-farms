@@ -1,4 +1,5 @@
 import axios from "axios";
+import appAxios from "@/config/axios";
 import Cookies from "js-cookie";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000";
@@ -95,23 +96,7 @@ export interface OrderItem {
 export type Category = { id: string; name: string; slug: string };
 
 // ─── HTTP Client ──────────────────────────────────────────────────────────────
-
-export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
-// Attach JWT for authenticated requests
-apiClient.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const token =
-      Cookies.get("auth_token") ?? localStorage.getItem("auth_token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
-  return config;
-});
+export const apiClient = appAxios;
 
 // ─── Products ─────────────────────────────────────────────────────────────────
 

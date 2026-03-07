@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Req,
   Res,
@@ -68,6 +70,7 @@ export class AuthController {
 
   // ─── Email / Password Login ───────────────────────────────────────────────
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(
     @Body() body: LoginDto,
     @Res({ passthrough: true }) res: Response,
@@ -153,6 +156,7 @@ export class AuthController {
   }
 
   @Post('passkey/login-verify')
+  @HttpCode(HttpStatus.OK)
   async verifyAuthentication(
     @Body() body: { response: any; email?: string },
     @Res({ passthrough: true }) res: Response,
@@ -171,6 +175,7 @@ export class AuthController {
 
   // ─── Logout ───────────────────────────────────────────────────────────────
   @Post('logout')
+  @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('refreshToken', {
       httpOnly: true,
