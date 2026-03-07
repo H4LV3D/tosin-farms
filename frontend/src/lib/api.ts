@@ -292,14 +292,14 @@ export const getPasskeyLoginOptions = async (email?: string) => {
   return response.data;
 };
 
-export const verifyPasskeyLogin = async (response: any, email?: string) => {
+export const verifyPasskeyLogin = async (response: any, email?: string, sessionToken?: string) => {
   const res = await apiClient.post<{
     id: string;
     token: string;
     role: string;
     email: string;
     name: string;
-  }>("/auth/passkey/login-verify", { response, email });
+  }>("/auth/passkey/login-verify", { response, email, sessionToken });
   return res.data;
 };
 

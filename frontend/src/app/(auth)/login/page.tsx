@@ -116,14 +116,15 @@ export default function LoginPage() {
     const email = form.getValues("email");
 
     try {
-      // 1. Get options
-      const options = await getPasskeyLoginOptions(email);
+      // 1. Get options (may include sessionToken for email-less / anonymous flow)
+      const optionsData = await getPasskeyLoginOptions(email);
+      const { sessionToken, ...options } = optionsData;
 
       // 2. Start browser authentication
       const authResponse = await startAuthentication(options);
 
-      // 3. Verify with server
-      const data = await verifyPasskeyLogin(authResponse, email);
+      // 3. Verify with server (pass sessionToken so backend can find the anonymous challenge)
+      const data = await verifyPasskeyLogin(authResponse, email, sessionToken);
 
       // 4. Handle success
       toast.success("Welcome back! Passkey login successful.");

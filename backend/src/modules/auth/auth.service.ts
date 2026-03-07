@@ -176,22 +176,25 @@ export class AuthService {
       userVerification: 'preferred',
     });
 
-    // If we have a user, store challenge. If not (generic login), we might need a different approach
-    // For simplicity, if email is provided, we store it. If not, this is a bit more complex.
-    // Let's assume user provides email for nudge, or we use a temporary session-based store.
-    // Given we added PasskeyChallenge with userId, we need it.
     if (userId) {
       await this.prisma.passkeyChallenge.upsert({
         where: { userId },
         update: { challenge: options.challenge },
         create: { userId, challenge: options.challenge },
       });
+      return options;
     }
 
-    return options;
+    // No email / user unknown — store an anonymous challenge keyed by its own id.
+    // The id is returned as a sessionToken so the client can send it back on verify.
+    const record = await this.prisma.passkeyChallenge.create({
+      data: { challenge: options.challenge },
+    });
+
+    return { ...options, sessionToken: record.id };
   }
 
-  async verifyAuthentication(body: any, _email?: string) {
+  async verifyAuthentication(body: any, _email?: string, sessionToken?: string) {
     // Find authenticator
     const credentialID = body.id;
     const auth = await this.prisma.authenticator.findUnique({
@@ -201,9 +204,16 @@ export class AuthService {
 
     if (!auth) throw new BadRequestException('Authenticator not found');
 
-    const challenge = await this.prisma.passkeyChallenge.findUnique({
+    // Look up challenge: first by userId (email-based flow), then by sessionToken (anonymous flow)
+    let challenge = await this.prisma.passkeyChallenge.findUnique({
       where: { userId: auth.userId },
     });
+
+    if (!challenge && sessionToken) {
+      challenge = await this.prisma.passkeyChallenge.findUnique({
+        where: { id: sessionToken },
+      });
+    }
 
     if (!challenge) throw new BadRequestException('Challenge not found');
 
@@ -235,9 +245,9 @@ export class AuthService {
         data: { counter: BigInt(authenticationInfo.newCounter) },
       });
 
-      // Clear challenge
+      // Clear challenge (use id since userId may be null for anonymous flow)
       await this.prisma.passkeyChallenge.delete({
-        where: { userId: auth.userId },
+        where: { id: challenge.id },
       });
 
       return this.signTokens(

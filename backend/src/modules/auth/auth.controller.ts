@@ -158,10 +158,10 @@ export class AuthController {
   @Post('passkey/login-verify')
   @HttpCode(HttpStatus.OK)
   async verifyAuthentication(
-    @Body() body: { response: any; email?: string },
+    @Body() body: { response: any; email?: string; sessionToken?: string },
     @Res({ passthrough: true }) res: Response,
   ) {
-    const data = await this.authService.verifyAuthentication(body.response, body.email);
+    const data = await this.authService.verifyAuthentication(body.response, body.email, body.sessionToken);
     this.setRefreshCookie(res, data.refreshToken);
 
     return {

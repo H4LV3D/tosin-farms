@@ -44,7 +44,7 @@ model Authenticator {
 
 model PasskeyChallenge {
   id        String   @id @default(uuid())
-  userId    String   @unique
+  userId    String?  @unique // nullable: null for anonymous (email-less) login flows
   challenge String
   createdAt DateTime @default(now())
 }
