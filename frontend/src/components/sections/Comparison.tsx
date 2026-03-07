@@ -1,10 +1,11 @@
 import React from "react";
+import Image from "next/image";
 
 export function Comparison() {
   return (
     <section className="py-24 lg:py-32 dark-section text-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-amber-900/15 blur-[100px] rounded-full pointer-events-none"></div>
-      <div className="relative z-10 max-w-screen-xl mx-auto px-6 lg:px-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
         <div className="max-w-2xl mb-16">
           <span className="reveal inline-block text-amber-500 text-xs font-bold uppercase tracking-widest mb-6">
             Why It Matters
@@ -15,8 +16,8 @@ export function Comparison() {
             The Real Difference
           </h2>
           <p className="reveal text-stone-400 text-lg leading-relaxed">
-            When you buy from Tosi Farms, you're not just getting food — you're
-            getting quality, freshness, and trust you can taste.
+            When you buy from Tosi Farms, you&apos;re not just getting food —
+            you&apos;re getting quality, freshness, and trust you can taste.
           </p>
         </div>
 
@@ -108,12 +109,14 @@ export function Comparison() {
 
           <div className="lg:col-span-4">
             <div className="reveal relative h-full min-h-[400px] rounded-2xl overflow-hidden group border border-white/5">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=600&q=75"
                 alt="Fresh farm produce basket"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                fill
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent pt-24">
+              <div className="absolute inset-x-0 bottom-0 p-6 bg-linear-to-t from-black via-black/80 to-transparent pt-24">
                 <div className="p-5 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
                   <p className="text-[10px] text-amber-400 uppercase tracking-widest font-bold mb-2">
                     The Bottom Line
@@ -122,8 +125,8 @@ export function Comparison() {
                     You Know Your Farmer.
                   </div>
                   <span className="text-sm text-stone-300 leading-snug block">
-                    Fresh, naturally grown, processed on-site. That's the Tosi
-                    Farms difference.
+                    Fresh, naturally grown, processed on-site. That&apos;s the
+                    Tosi Farms difference.
                   </span>
                 </div>
               </div>

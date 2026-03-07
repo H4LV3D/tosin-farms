@@ -9,7 +9,9 @@ export default function AuthLayout({
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 gap-y-4">
       <BrandLogo size={48} />
-      <Card className="w-full max-w-md shadow-none bg-white">{children}</Card>
+      <Card className="w-full max-w-md shadow-none bg-white py-4">
+        {children}
+      </Card>
     </div>
   );
 }

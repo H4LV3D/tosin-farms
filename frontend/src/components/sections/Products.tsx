@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export function Products() {
   const products = [
@@ -49,7 +50,7 @@ export function Products() {
       <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-amber-900/20 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute -bottom-20 -right-20 w-[400px] h-[400px] bg-green-900/10 blur-[100px] rounded-full pointer-events-none"></div>
 
-      <div className="relative z-10 max-w-screen-xl mx-auto px-6 lg:px-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
         <div className="max-w-2xl mb-16">
           <span className="reveal inline-block text-amber-500 text-xs font-bold uppercase tracking-widest mb-6">
             What We Sell
@@ -73,12 +74,14 @@ export function Products() {
               className="reveal product-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden group cursor-pointer block"
             >
               <div className="relative h-52 overflow-hidden">
-                <img
+                <Image
                   src={p.img}
                   alt={p.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent"></div>
                 <span
                   className={`absolute top-4 left-4 ${p.badgeColor} text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full`}
                 >

@@ -4,7 +4,7 @@ export function TestimonialsCTA() {
   return (
     <>
       <section id="testimonials" className="py-24 lg:py-32 pattern-bg">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="reveal inline-block text-[10px] uppercase tracking-[0.2em] text-amber-700 font-bold mb-6">
               What Customers Say
@@ -18,9 +18,9 @@ export function TestimonialsCTA() {
             <div className="reveal bg-white rounded-2xl p-8 shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
               <div className="flex gap-1 mb-4 text-amber-400">★★★★★</div>
               <p className="font-display text-[#1c1917] italic text-base leading-relaxed mb-6">
-                "The garri from Tosi Farms is the best I've tasted — crunchy,
-                clean, and properly dried. We now buy in bulk for our whole
-                compound."
+                &quot;The garri from Tosi Farms is the best I&apos;ve tasted —
+                crunchy, clean, and properly dried. We now buy in bulk for our
+                whole compound.&quot;
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-sm">
@@ -36,9 +36,9 @@ export function TestimonialsCTA() {
             <div className="reveal bg-white rounded-2xl p-8 shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
               <div className="flex gap-1 mb-4 text-amber-400">★★★★★</div>
               <p className="font-display text-[#1c1917] italic text-base leading-relaxed mb-6">
-                "I buy their maize for my feed mill every season. Always
+                &quot;I buy their maize for my feed mill every season. Always
                 consistent quality and they always have enough in stock. Highly
-                reliable farmers."
+                reliable farmers.&quot;
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-sm">
@@ -54,9 +54,9 @@ export function TestimonialsCTA() {
             <div className="reveal bg-white rounded-2xl p-8 shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
               <div className="flex gap-1 mb-4 text-amber-400">★★★★★</div>
               <p className="font-display text-[#1c1917] italic text-base leading-relaxed mb-6">
-                "Their pineapples and plantains are always fresh. I stock my
-                market stall from Tosi Farms every week. My customers always
-                ask where I get them!"
+                &quot;Their pineapples and plantains are always fresh. I stock
+                my market stall from Tosi Farms every week. My customers always
+                ask where I get them!&quot;
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-sm">
@@ -73,7 +73,7 @@ export function TestimonialsCTA() {
       </section>
 
       <section className="py-20 dark-section text-white">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="reveal p-7 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-500/30 transition-all hover:-translate-y-1">
               <div className="text-amber-400 mb-5">

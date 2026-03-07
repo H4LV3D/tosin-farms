@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/shared/confirmDialog";
 import { fetchProduct } from "@/lib/api";
@@ -93,14 +94,12 @@ export default function AdminProductDetailPage() {
           <div className="relative h-80 bg-stone-100 rounded-2xl overflow-hidden">
             {hasImages ? (
               <>
-                <img
+                <Image
                   src={product.images[imgIdx]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://placehold.co/800x600?text=No+Image";
-                  }}
+                  fill
+                  className="object-cover"
+                  unoptimized
                 />
                 {product.images.length > 1 && (
                   <>
@@ -153,14 +152,12 @@ export default function AdminProductDetailPage() {
                   onClick={() => setImgIdx(i)}
                   className={`w-16 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${i === imgIdx ? "border-amber-500" : "border-transparent"}`}
                 >
-                  <img
+                  <Image
                     src={src}
                     alt=""
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://placehold.co/80x80?text=img";
-                    }}
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
                 </button>
               ))}

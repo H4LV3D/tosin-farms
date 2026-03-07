@@ -1,18 +1,21 @@
 import React from "react";
+import Image from "next/image";
 
 export function WhyChooseUs() {
   return (
     <section id="difference" className="py-24 lg:py-32 pattern-bg">
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div>
-            <figure className="reveal relative rounded-2xl overflow-hidden shadow-xl aspect-[4/5] ring-1 ring-black/5 group">
-              <img
+            <figure className="reveal relative rounded-2xl overflow-hidden shadow-xl aspect-4/5 ring-1 ring-black/5 group">
+              <Image
                 src="https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?w=900&q=80"
                 alt="African farmer in the field"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent"></div>
               <div className="absolute bottom-8 left-8 right-8">
                 <span className="px-3 py-1.5 bg-amber-600/90 backdrop-blur rounded-full text-[10px] uppercase font-bold text-white tracking-widest mb-3 inline-block">
                   Rooted in Community
@@ -35,8 +38,8 @@ export function WhyChooseUs() {
             </h2>
             <p className="reveal text-lg text-stone-600 leading-relaxed mb-10">
               Markets are flooded with produce that travels far and sits long.
-              At Tosi Farms, everything — from our cassava tubers to our garri
-              — is grown right here and processed with traditional care, so you
+              At Tosi Farms, everything — from our cassava tubers to our garri —
+              is grown right here and processed with traditional care, so you
               get the best nutritional value and flavour every time.
             </p>
 
@@ -59,7 +62,7 @@ export function WhyChooseUs() {
               </h3>
               <ul className="space-y-6">
                 <li className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center">
+                  <div className="shrink-0 w-10 h-10 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center">
                     <svg
                       className="w-5 h-5 text-amber-700"
                       fill="none"
@@ -85,7 +88,7 @@ export function WhyChooseUs() {
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center">
+                  <div className="shrink-0 w-10 h-10 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center">
                     <svg
                       className="w-5 h-5 text-amber-700"
                       fill="none"
@@ -111,7 +114,7 @@ export function WhyChooseUs() {
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center">
+                  <div className="shrink-0 w-10 h-10 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center">
                     <svg
                       className="w-5 h-5 text-amber-700"
                       fill="none"
