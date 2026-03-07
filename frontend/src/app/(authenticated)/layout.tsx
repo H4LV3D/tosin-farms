@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { decodeJwtPayload, isTokenExpired } from "@/lib/auth";
+import { decodeJwtPayload } from "@/lib/auth";
 import Sidebar from "./sidebar";
 import { PasskeyNudge } from "@/components/shared/PasskeyNudge";
 
@@ -10,7 +10,8 @@ export default async function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const tokenCookie = cookieStore.get("refreshToken");
+
+  const tokenCookie = cookieStore.get("auth_token");
 
   if (!tokenCookie?.value) {
     redirect("/login");
@@ -18,7 +19,7 @@ export default async function AuthenticatedLayout({
 
   const payload = decodeJwtPayload(tokenCookie.value);
 
-  if (!payload || isTokenExpired(payload)) {
+  if (!payload) {
     redirect("/login");
   }
 

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { decodeJwtPayload, isTokenExpired } from "@/lib/auth";
+import { decodeJwtPayload } from "@/lib/auth";
 
 export default async function AdminLayout({
     children,
@@ -16,7 +16,7 @@ export default async function AdminLayout({
 
     const payload = decodeJwtPayload(tokenCookie.value);
 
-    if (!payload || isTokenExpired(payload)) {
+    if (!payload) {
         redirect("/login");
     }
 
