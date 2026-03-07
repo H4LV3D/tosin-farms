@@ -39,7 +39,8 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {
     this.rpID = this.configService.get<string>('RP_ID') || 'localhost';
-    this.origin = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    this.origin =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
   }
 
   // ─── WebAuthn Registration ────────────────────────────────────────────────
@@ -61,10 +62,12 @@ export class AuthService {
       userName: user.email,
       userDisplayName: user.name || user.email,
       attestationType: 'none',
-      excludeCredentials: userWithAuths.authenticators.map((auth: IAuthenticator) => ({
-        id: auth.credentialID,
-        type: 'public-key',
-      })),
+      excludeCredentials: userWithAuths.authenticators.map(
+        (auth: IAuthenticator) => ({
+          id: auth.credentialID,
+          type: 'public-key',
+        }),
+      ),
       authenticatorSelection: {
         residentKey: 'required',
         userVerification: 'preferred',
@@ -110,18 +113,22 @@ export class AuthService {
     const { verified, registrationInfo } = verification;
 
     if (verified && registrationInfo) {
-      const {
-        credential,
-        credentialDeviceType,
-        credentialBackedUp,
-      } = registrationInfo;
+      const { credential, credentialDeviceType, credentialBackedUp } =
+        registrationInfo;
 
-      const { id: credentialID, publicKey: credentialPublicKey, counter } = credential;
+      const {
+        id: credentialID,
+        publicKey: credentialPublicKey,
+        counter,
+      } = credential;
 
       await this.prisma.authenticator.create({
         data: {
           userId: user.id,
-          credentialID: typeof credentialID === 'string' ? credentialID : isoBase64URL.fromBuffer(credentialID),
+          credentialID:
+            typeof credentialID === 'string'
+              ? credentialID
+              : isoBase64URL.fromBuffer(credentialID),
           credentialPublicKey: Buffer.from(credentialPublicKey),
           counter: BigInt(counter),
           credentialDeviceType,
@@ -139,7 +146,8 @@ export class AuthService {
 
   // ─── WebAuthn Authentication ──────────────────────────────────────────────
   async getAuthenticationOptions(email?: string) {
-    let userAuthenticators: { credentialID: string; transports?: string[] }[] = [];
+    let userAuthenticators: { credentialID: string; transports?: string[] }[] =
+      [];
     let userId: string | null = null;
 
     if (email) {
@@ -149,9 +157,11 @@ export class AuthService {
       });
       if (user) {
         userId = user.id;
-        userAuthenticators = (user as User & { authenticators: IAuthenticator[] }).authenticators.map((auth: IAuthenticator) => ({
+        userAuthenticators = (
+          user as User & { authenticators: IAuthenticator[] }
+        ).authenticators.map((auth: IAuthenticator) => ({
           credentialID: auth.credentialID,
-          transports: auth.transports as string[],
+          transports: auth.transports,
         }));
       }
     }
@@ -181,7 +191,7 @@ export class AuthService {
     return options;
   }
 
-  async verifyAuthentication(body: any, email?: string) {
+  async verifyAuthentication(body: any, _email?: string) {
     // Find authenticator
     const credentialID = body.id;
     const auth = await this.prisma.authenticator.findUnique({
@@ -226,16 +236,22 @@ export class AuthService {
       });
 
       // Clear challenge
-      await this.prisma.passkeyChallenge.delete({ where: { userId: auth.userId } });
+      await this.prisma.passkeyChallenge.delete({
+        where: { userId: auth.userId },
+      });
 
-      return this.signTokens(auth.user.id, auth.user.email, auth.user.role, auth.user.name);
+      return this.signTokens(
+        auth.user.id,
+        auth.user.email,
+        auth.user.role,
+        auth.user.name,
+      );
     }
 
     throw new UnauthorizedException('Authentication failed');
   }
 
   // ─── Legacy methods ───────────────────────────────────────────────
-
 
   // ─── Email / Password Register ──────────────────────────────────────────────
   async register(email: string, password: string, name?: string) {

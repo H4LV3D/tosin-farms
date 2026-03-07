@@ -1,15 +1,15 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ShoppingCart, AlertTriangle, Loader2 } from "lucide-react";
+import { Users, AlertTriangle, Loader2 } from "lucide-react";
 import { DataTable } from "@/components/admin/DataTable";
-import { fetchAdminOrders } from "@/lib/admin-api";
-import { orderColumns } from "./_components/columns";
+import { fetchAdminUsers } from "@/lib/admin-api";
+import { userColumns } from "./_components/columns";
 
-export default function AdminOrdersPage() {
-    const { data: orders = [], isLoading, isError } = useQuery({
-        queryKey: ["admin-orders"],
-        queryFn: fetchAdminOrders,
+export default function AdminUsersPage() {
+    const { data: users = [], isLoading, isError } = useQuery({
+        queryKey: ["admin-users"],
+        queryFn: fetchAdminUsers,
     });
 
     return (
@@ -17,11 +17,11 @@ export default function AdminOrdersPage() {
 
             {/* ── Header ── */}
             <div>
-                <h1 className="text-2xl font-bold text-stone-900 tracking-tight">Orders</h1>
+                <h1 className="text-2xl font-bold text-stone-900 tracking-tight">Users</h1>
                 <p className="text-sm text-stone-400 mt-0.5">
                     {isLoading
                         ? "Loading…"
-                        : `${orders.length} order${orders.length !== 1 ? "s" : ""} total`}
+                        : `${users.length} registered user${users.length !== 1 ? "s" : ""}`}
                 </p>
             </div>
 
@@ -36,24 +36,24 @@ export default function AdminOrdersPage() {
             {isError && (
                 <div className="flex items-center justify-center h-64 text-red-500 gap-2.5">
                     <AlertTriangle className="w-5 h-5" />
-                    <span className="text-sm font-medium">Failed to load orders. Check your connection.</span>
+                    <span className="text-sm font-medium">Failed to load users. Check your connection.</span>
                 </div>
             )}
 
             {/* ── Empty ── */}
-            {!isLoading && !isError && orders.length === 0 && (
+            {!isLoading && !isError && users.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-64 gap-3 text-stone-300">
-                    <ShoppingCart className="w-14 h-14" />
-                    <p className="font-medium text-stone-500">No orders yet</p>
+                    <Users className="w-14 h-14" />
+                    <p className="font-medium text-stone-500">No users yet</p>
                 </div>
             )}
 
             {/* ── Table ── */}
-            {!isLoading && !isError && orders.length > 0 && (
+            {!isLoading && !isError && users.length > 0 && (
                 <DataTable
-                    columns={orderColumns}
-                    data={orders}
-                    filterPlaceholder="Search by ID, customer, or status…"
+                    columns={userColumns}
+                    data={users}
+                    filterPlaceholder="Search by name or email…"
                 />
             )}
         </div>

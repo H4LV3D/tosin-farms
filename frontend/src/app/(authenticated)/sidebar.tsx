@@ -10,6 +10,7 @@ import {
   LogOut,
   ChevronRight,
   Sprout,
+  Users as UsersIcon,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { User, MapPin } from "lucide-react";
@@ -25,6 +26,7 @@ const adminNavItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Products", href: "/admin/products", icon: Package },
   { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
+  { label: "Users", href: "/admin/users", icon: UsersIcon },
 ];
 
 export default function Sidebar({
