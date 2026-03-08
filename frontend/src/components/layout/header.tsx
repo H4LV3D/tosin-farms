@@ -99,7 +99,7 @@ export function Header({ isHomePage = false }: HeaderProps) {
                       isDarkTheme ? "text-stone-200" : "text-stone-700"
                     }`}
                   >
-                    {user.name}
+                    {user?.name?.split(" ")[0]}
                   </span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent

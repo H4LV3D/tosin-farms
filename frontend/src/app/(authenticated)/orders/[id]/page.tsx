@@ -116,7 +116,7 @@ export default function OrderDetailsPage() {
   }
 
   return (
-    <AuthenticatedPageContainer maxWidth="5xl">
+    <AuthenticatedPageContainer>
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-4">
@@ -128,9 +128,7 @@ export default function OrderDetailsPage() {
             Go Back
           </button>
           <div className="flex flex-wrap items-center gap-4">
-            <h1 className="text-4xl font-display font-bold text-[#1c1917]">
-              Order Details
-            </h1>
+            <h1 className="text-4xl font-bold text-[#1c1917]">Order Details</h1>
             <Badge
               className={cn(
                 "px-4 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-widest gap-2",
@@ -144,9 +142,7 @@ export default function OrderDetailsPage() {
         </div>
 
         <div className="text-left md:text-right">
-          <div className="text-stone-400 font-black uppercase tracking-[0.2em] text-[10px]">
-            Order Reference
-          </div>
+          <div className="text-stone-500 font-medium text-sm">Order ID</div>
           <div className="text-lg font-black text-[#1c1917] mt-1">
             #{order.id.slice(-12).toUpperCase()}
           </div>
@@ -157,7 +153,7 @@ export default function OrderDetailsPage() {
         {/* Main Content (Left) */}
         <div className="lg:col-span-2 space-y-8">
           {/* Status & Summary Card */}
-          <Card className="border-none shadow-2xl shadow-stone-200/40 rounded-[2.5rem] bg-white overflow-hidden">
+          <Card className="border-none shadow-2xl shadow-stone-200/40 rounded-xl bg-white overflow-hidden">
             <CardHeader className="px-8 pt-8 flex-row items-center justify-between space-y-0">
               <CardTitle className="text-xl font-bold flex items-center gap-3">
                 <History className="w-5 h-5 text-amber-600" />
@@ -189,9 +185,9 @@ export default function OrderDetailsPage() {
                     <CreditCard className="w-3 h-3" />
                     Payment
                   </p>
-                  <p className="font-bold text-[#1c1917] flex items-center gap-1.5 uppercase text-[10px]">
+                  <p className="font-bold text-[#1c1917] flex items-center gap-1.5 uppercase">
                     <span className="w-2 h-2 rounded-full bg-green-500" />
-                    Confirmed
+                    PAID
                   </p>
                 </div>
               </div>
@@ -225,7 +221,7 @@ export default function OrderDetailsPage() {
           </Card>
 
           {/* Order Items */}
-          <Card className="border-none shadow-2xl shadow-stone-200/40 rounded-[2.5rem] bg-white overflow-hidden">
+          <Card className="border-none shadow-2xl shadow-stone-200/40 rounded-xl bg-white overflow-hidden">
             <CardHeader className="px-8 pt-8">
               <CardTitle className="text-xl font-bold flex items-center gap-3">
                 <Package className="w-5 h-5 text-amber-600" />
@@ -265,7 +261,7 @@ export default function OrderDetailsPage() {
                 ))}
               </div>
 
-              <Separator className="my-10 bg-stone-50" />
+              <Separator className="my-8 bg-stone-50" />
 
               <div className="space-y-4 max-w-sm ml-auto">
                 <div className="flex justify-between text-stone-500 font-bold uppercase tracking-widest text-[10px]">
@@ -278,17 +274,19 @@ export default function OrderDetailsPage() {
                     ).toLocaleString()}
                   </span>
                 </div>
+
                 <div className="flex justify-between text-stone-500 font-bold uppercase tracking-widest text-[10px] pb-5 border-b border-stone-50">
                   <span>Shipping Fee</span>
                   <span className="text-stone-800">
                     ₦{(order.totalAmount > 5000 ? 2500 : 1500).toLocaleString()}
                   </span>
                 </div>
+
                 <div className="flex justify-between items-end pt-3">
-                  <span className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">
+                  <span className="text-sm font-black text-stone-500 uppercase">
                     Total Paid
                   </span>
-                  <span className="text-3xl font-black text-amber-700 italic">
+                  <span className="text-3xl font-black text-amber-700">
                     ₦{order.totalAmount.toLocaleString()}
                   </span>
                 </div>
@@ -300,34 +298,36 @@ export default function OrderDetailsPage() {
         {/* Sidebar (Right) */}
         <div className="space-y-8">
           {/* Shipping Address */}
-          <Card className="border-none shadow-2xl shadow-stone-200/40 rounded-[2.5rem] bg-white overflow-hidden">
-            <CardHeader className="px-8 pt-8">
+          <Card className="border-none shadow-stone-200/40 rounded-xl p-6 bg-white overflow-hidden">
+            <CardHeader className="px-0">
               <CardTitle className="text-xl font-bold flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-amber-600" />
                 Delivery
               </CardTitle>
             </CardHeader>
-            <CardContent className="px-8 pb-8 pt-2">
+            <CardContent className="px-0 pt-2">
               {shipping ? (
                 <div className="space-y-5">
                   <div className="p-5 rounded-3xl bg-amber-50/50 border border-amber-100/50">
-                    <p className="text-sm font-black text-[#1c1917] uppercase tracking-tight">
+                    <p className="text-sm font-black text-[#1c1917] tracking-tight">
                       {shipping.fullName}
                     </p>
                     <p className="text-[11px] text-amber-700 font-black mt-1 uppercase tracking-widest">
                       {shipping.phone}
                     </p>
                   </div>
-                  <div className="space-y-2 text-sm text-stone-500 font-medium leading-relaxed italic">
+
+                  <div className="space-y-2 text-sm text-stone-500 font-medium leading-relaxed">
                     <p>{shipping.street}</p>
                     <p>
                       {shipping.city}, {shipping.state}
                     </p>
-                    {shipping.zipCode && (
+
+                    {/* {shipping.zipCode && (
                       <p className="text-[10px] text-stone-400 font-black uppercase tracking-widest mt-2">
                         {shipping.zipCode}
                       </p>
-                    )}
+                    )} */}
                   </div>
                 </div>
               ) : (
@@ -339,14 +339,15 @@ export default function OrderDetailsPage() {
           </Card>
 
           {/* Support Nudge */}
-          <Card className="border-none shadow-2xl shadow-stone-200/40 rounded-[2.5rem] bg-[#1a1a0e] text-white overflow-hidden relative group">
+          <Card className="border-none shadow-2xl shadow-stone-200/40 rounded-xl bg-[#1a1a0e] text-white overflow-hidden relative group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-600/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-amber-600/20 transition-all duration-700" />
-            <CardContent className="p-8 space-y-6 relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center shadow-2xl">
-                <HelpCircle className="w-7 h-7 text-amber-400" />
+            <CardContent className="p-6 space-y-6 relative z-10">
+              <div className="w-14 h-14 rounded-lg bg-white/10 flex items-center justify-center shadow-2xl">
+                <HelpCircle className="w-7 h-7 text-amber-600" />
               </div>
+
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold uppercase tracking-tight italic">
+                <h3 className="text-2xl font-bold uppercase tracking-tight">
                   Need Help?
                 </h3>
                 <p className="text-stone-400 text-sm leading-relaxed font-medium">
@@ -354,7 +355,7 @@ export default function OrderDetailsPage() {
                   to assist you 24/7.
                 </p>
               </div>
-              <Button className="w-full h-14 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white font-black uppercase tracking-[0.2em] text-[10px] gap-2 shadow-xl shadow-amber-900/40 transition-all active:scale-95">
+              <Button className="w-full h-14 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black uppercase tracking-[0.2em] text-[10px] gap-2 shadow-xl shadow-amber-900/40 transition-all active:scale-95">
                 Contact Support
               </Button>
             </CardContent>

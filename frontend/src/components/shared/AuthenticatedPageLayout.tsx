@@ -100,20 +100,18 @@ export function EmptyState({
   return (
     <Card
       className={cn(
-        "border-none shadow-2xl shadow-stone-200/40 rounded-[3rem] bg-white overflow-hidden py-20 px-8 text-center",
+        "border-none shadow-2xl shadow-stone-200/40 rounded-xl bg-white overflow-hidden py-20 px-8 text-center",
         className,
       )}
     >
       <CardContent className="flex flex-col items-center max-w-md mx-auto space-y-8">
-        <div className="w-28 h-28 rounded-[2rem] bg-stone-50 flex items-center justify-center relative shadow-inner rotate-3">
+        <div className="size-28 rounded-[2rem] bg-stone-50 flex items-center justify-center relative shadow-inner rotate-3">
           <Icon className="w-12 h-12 text-stone-200" />
-          <Search className="w-6 h-6 text-amber-500 absolute -bottom-2 -right-2 bg-white rounded-full p-1 shadow-md" />
+          <Search className="size-10 text-amber-500 absolute -bottom-2 -right-2 bg-white rounded-full p-2.5 shadow-md" />
         </div>
 
-        <div className="space-y-3">
-          <h3 className="text-2xl font-bold text-[#1c1917] uppercase tracking-tighter">
-            {title}
-          </h3>
+        <div className="space-y-2">
+          <h3 className="text-2xl font-bold text-[#1c1917]">{title}</h3>
           <p className="text-stone-500 font-medium leading-relaxed">
             {description}
           </p>

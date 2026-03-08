@@ -55,7 +55,7 @@ export default function WishlistPage() {
       {wishlist.length === 0 ? (
         <EmptyState
           icon={Heart}
-          title="Your dream harvest is empty"
+          title="Your favorites is empty"
           description="Start browsing our fresh products and save them here for later!"
           actionLabel="Explore Products"
           actionHref="/shop"
