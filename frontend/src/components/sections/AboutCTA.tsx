@@ -12,7 +12,7 @@ export function AboutCTA() {
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-700/10 rounded-full -ml-32 -mb-32 blur-3xl"></div>
 
           <div className="relative z-10 max-w-3xl mx-auto">
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-white mb-8 italic">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl lg:leading-[72px] font-black text-white mb-8">
               Ready to <span className="text-gold">Experience</span> <br />
               Our Quality?
             </h2>
@@ -30,9 +30,9 @@ export function AboutCTA() {
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest px-10 py-5 rounded-full border border-white/10 transition-all backdrop-blur-sm"
+                className="inline-flex items-center justify-center bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest px-14 py-5 rounded-full border border-white/10 transition-all backdrop-blur-sm"
               >
-                Contact Our Team
+                Contact Us
               </Link>
             </div>
           </div>

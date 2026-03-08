@@ -33,7 +33,7 @@ export function AboutValues() {
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="text-center mb-16">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-stone-800 mb-6 italic">
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-stone-800 mb-6">
             Our Values
           </h2>
           <p className="text-stone-500 max-w-2xl mx-auto font-light leading-relaxed">

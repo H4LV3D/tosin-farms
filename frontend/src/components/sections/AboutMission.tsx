@@ -11,7 +11,7 @@ export function AboutMission() {
             <div className="w-16 h-16 rounded-2xl bg-amber-700/10 flex items-center justify-center mb-8 group-hover:bg-amber-700 group-hover:text-white transition-all duration-500">
               <Target className="w-8 h-8 text-amber-700 group-hover:text-white" />
             </div>
-            <h3 className="font-display text-3xl font-bold text-stone-800 mb-6 italic">
+            <h3 className="font-display text-3xl font-bold text-stone-800 mb-6">
               Our Mission
             </h3>
             <p className="text-stone-600 leading-relaxed text-lg font-light">
@@ -27,7 +27,7 @@ export function AboutMission() {
             <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-8 group-hover:bg-amber-500 group-hover:text-white transition-all duration-500">
               <Eye className="w-8 h-8 text-amber-400 group-hover:text-white" />
             </div>
-            <h3 className="font-display text-3xl font-bold text-white mb-6 italic">
+            <h3 className="font-display text-3xl font-bold text-white mb-6">
               Our Vision
             </h3>
             <p className="text-stone-400 leading-relaxed text-lg font-light">

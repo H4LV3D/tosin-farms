@@ -9,7 +9,7 @@ export function AboutHistory() {
           <div className="relative group">
             <div className="relative aspect-square rounded-[3rem] overflow-hidden shadow-2xl z-10">
               <Image
-                src="https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=2672&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1622123651884-e3d30eebfbff?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Farmer working in the field"
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                 fill
@@ -24,7 +24,7 @@ export function AboutHistory() {
             <div className="reveal inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-amber-700/10 border border-amber-700/20 text-amber-700 text-[10px] font-bold uppercase tracking-widest">
               Established 2014
             </div>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-stone-800 italic">
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-stone-800">
               Our Story
             </h2>
             <div className="space-y-6 text-stone-600 leading-relaxed text-lg font-light">

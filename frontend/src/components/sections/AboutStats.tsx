@@ -14,7 +14,7 @@ export function AboutStats() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
           {stats.map((stat, idx) => (
             <div key={idx} className="reveal-delayed">
-              <div className="font-display text-5xl md:text-6xl font-black text-amber-500 mb-2 italic">
+              <div className="font-display text-5xl md:text-6xl font-black text-amber-500 mb-2">
                 {stat.value}
               </div>
               <div className="text-[10px] font-black text-white uppercase tracking-[0.3em]">
