@@ -73,12 +73,15 @@ appAxios.interceptors.response.use(
         );
 
         // Set new credentials in Zustand
-        useStore
-          .getState()
-          .setCredentials(
-            { email: data.email, role: data.role, name: data.name },
-            data.token,
-          );
+        useStore.getState().setCredentials(
+          {
+            id: data.id,
+            email: data.email,
+            role: data.role,
+            name: data.name,
+          },
+          data.token,
+        );
 
         appAxios.defaults.headers.common["Authorization"] =
           "Bearer " + data.token;

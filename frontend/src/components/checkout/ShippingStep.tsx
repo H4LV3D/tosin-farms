@@ -179,6 +179,8 @@ export function ShippingStep({
           id: Math.random().toString(),
           ...data,
           isDefault: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         };
         setAddresses([guestAddr]);
         setSelectedAddressId(guestAddr.id);
