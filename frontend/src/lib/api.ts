@@ -1,8 +1,5 @@
-import axios from "axios";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import appAxios from "@/config/axios";
-import Cookies from "js-cookie";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -225,7 +222,9 @@ export async function fetchWishlist(): Promise<WishlistItem[]> {
 }
 
 export async function addToWishlist(productId: string): Promise<WishlistItem> {
-  const res = await apiClient.post<WishlistItem>(`/users/wishlist/${productId}`);
+  const res = await apiClient.post<WishlistItem>(
+    `/users/wishlist/${productId}`,
+  );
   return res.data;
 }
 
@@ -292,14 +291,22 @@ export const getPasskeyLoginOptions = async (email?: string) => {
   return response.data;
 };
 
-export const verifyPasskeyLogin = async (response: any, email?: string, sessionToken?: string) => {
+export const verifyPasskeyLogin = async (
+  response: any,
+  email?: string,
+  sessionToken?: string,
+) => {
+  const payload: any = { response };
+  if (email && email.trim()) payload.email = email.trim();
+  if (sessionToken) payload.sessionToken = sessionToken;
+
   const res = await apiClient.post<{
     id: string;
     token: string;
     role: string;
     email: string;
     name: string;
-  }>("/auth/passkey/login-verify", { response, email, sessionToken });
+  }>("/auth/passkey/login-verify", payload);
   return res.data;
 };
 

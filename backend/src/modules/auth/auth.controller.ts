@@ -44,7 +44,7 @@ class RegisterDto {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   // ─── Email / Password Register ──────────────────────────────────────────────
   @Post('register')
@@ -141,13 +141,18 @@ export class AuthController {
   @Get('passkey/register-options')
   @UseGuards(AuthGuard('jwt')) // Ensure user is logged in to register a passkey
   async getRegistrationOptions(@Req() req: any) {
-    return this.authService.getRegistrationOptions(req.user.userId || req.user.sub);
+    return this.authService.getRegistrationOptions(
+      req.user.userId || req.user.sub,
+    );
   }
 
   @Post('passkey/register-verify')
   @UseGuards(AuthGuard('jwt'))
   async verifyRegistration(@Req() req: any, @Body() body: any) {
-    return this.authService.verifyRegistration(req.user.userId || req.user.sub, body);
+    return this.authService.verifyRegistration(
+      req.user.userId || req.user.sub,
+      body,
+    );
   }
 
   @Post('passkey/login-options')
@@ -161,7 +166,11 @@ export class AuthController {
     @Body() body: { response: any; email?: string; sessionToken?: string },
     @Res({ passthrough: true }) res: Response,
   ) {
-    const data = await this.authService.verifyAuthentication(body.response, body.email, body.sessionToken);
+    const data = await this.authService.verifyAuthentication(
+      body.response,
+      body.email,
+      body.sessionToken,
+    );
     this.setRefreshCookie(res, data.refreshToken);
 
     return {

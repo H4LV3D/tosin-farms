@@ -177,16 +177,27 @@ export class AuthService {
     });
 
     if (userId) {
-      await this.prisma.passkeyChallenge.upsert({
+      // Cleanup any existing challenges for this user to avoid staleness
+      await this.prisma.passkeyChallenge.deleteMany({
         where: { userId },
-        update: { challenge: options.challenge },
-        create: { userId, challenge: options.challenge },
+      });
+
+      await this.prisma.passkeyChallenge.create({
+        data: { userId, challenge: options.challenge },
       });
       return options;
     }
 
     // No email / user unknown — store an anonymous challenge keyed by its own id.
-    // The id is returned as a sessionToken so the client can send it back on verify.
+    // Cleanup anonymous challenges older than 10 minutes to prevent database bloat
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+    await this.prisma.passkeyChallenge.deleteMany({
+      where: {
+        userId: null,
+        createdAt: { lt: tenMinutesAgo },
+      },
+    });
+
     const record = await this.prisma.passkeyChallenge.create({
       data: { challenge: options.challenge },
     });
@@ -194,7 +205,7 @@ export class AuthService {
     return { ...options, sessionToken: record.id };
   }
 
-  async verifyAuthentication(body: any, _email?: string, sessionToken?: string) {
+  async verifyAuthentication(body: any, email?: string, sessionToken?: string) {
     // Find authenticator
     const credentialID = body.id;
     const auth = await this.prisma.authenticator.findUnique({
@@ -202,12 +213,33 @@ export class AuthService {
       include: { user: true },
     });
 
-    if (!auth) throw new BadRequestException('Authenticator not found');
+    if (!auth)
+      throw new BadRequestException(
+        'Passkey not recognized. Please register first.',
+      );
 
-    // Look up challenge: first by userId (email-based flow), then by sessionToken (anonymous flow)
-    let challenge = await this.prisma.passkeyChallenge.findUnique({
-      where: { userId: auth.userId },
-    });
+    // Look up challenge:
+    // 1. If email is provided, favor looking up the challenge for THAT user.
+    // 2. Otherwise fall back to the challenge for the user tied to this passkey.
+    // 3. Finally, fall back to the sessionToken (anonymous flow).
+    let challenge = null;
+
+    if (email) {
+      const targetUser = await this.prisma.user.findUnique({
+        where: { email },
+      });
+      if (targetUser) {
+        challenge = await this.prisma.passkeyChallenge.findUnique({
+          where: { userId: targetUser.id },
+        });
+      }
+    }
+
+    if (!challenge) {
+      challenge = await this.prisma.passkeyChallenge.findUnique({
+        where: { userId: auth.userId },
+      });
+    }
 
     if (!challenge && sessionToken) {
       challenge = await this.prisma.passkeyChallenge.findUnique({
@@ -215,7 +247,11 @@ export class AuthService {
       });
     }
 
-    if (!challenge) throw new BadRequestException('Challenge not found');
+    if (!challenge) {
+      throw new BadRequestException(
+        'Security challenge not found or expired. Please try signing in again.',
+      );
+    }
 
     let verification;
     try {

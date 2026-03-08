@@ -23,10 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { Loader2, Fingerprint } from "lucide-react";
 import appAxios from "@/config/axios";
 import { startAuthentication } from "@simplewebauthn/browser";
-import {
-  getPasskeyLoginOptions,
-  verifyPasskeyLogin
-} from "@/lib/api";
+import { getPasskeyLoginOptions, verifyPasskeyLogin } from "@/lib/api";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -71,7 +68,12 @@ export default function LoginPage() {
       });
 
       setCredentials(
-        { email: data.email, role: data.role, name: data.name || data.email, id: data.id },
+        {
+          email: data.email,
+          role: data.role,
+          name: data.name || data.email,
+          id: data.id,
+        },
         data.token,
       );
 
@@ -117,29 +119,42 @@ export default function LoginPage() {
 
     try {
       // 1. Get options (may include sessionToken for email-less / anonymous flow)
-      const optionsData = await getPasskeyLoginOptions(email);
+      const sanitizedEmail = email?.trim() || undefined;
+      const optionsData = await getPasskeyLoginOptions(sanitizedEmail);
       const { sessionToken, ...options } = optionsData;
 
       // 2. Start browser authentication
       const authResponse = await startAuthentication(options);
 
       // 3. Verify with server (pass sessionToken so backend can find the anonymous challenge)
-      const data = await verifyPasskeyLogin(authResponse, email, sessionToken);
+      const data = await verifyPasskeyLogin(
+        authResponse,
+        sanitizedEmail,
+        sessionToken,
+      );
 
       // 4. Handle success
       toast.success("Welcome back! Passkey login successful.");
       setCredentials(
-        { email: data.email, role: data.role, name: data.name || data.email, id: data.id },
+        {
+          email: data.email,
+          role: data.role,
+          name: data.name || data.email,
+          id: data.id,
+        },
         data.token,
       );
 
       setTimeout(() => {
-        window.location.href = data.role === "ADMIN" ? "/admin/dashboard" : "/orders";
+        window.location.href =
+          data.role === "ADMIN" ? "/admin/dashboard" : "/orders";
       }, 1000);
-
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Passkey login failed", err);
-      const message = err?.response?.data?.message || "Passkey login failed. Please ensure you have registered a passkey with this email.";
+      const message =
+        err?.response?.data?.message ||
+        "Passkey login failed. Please ensure you have registered a passkey with this email.";
       setErrorMsg(message);
       toast.error(message);
     }
