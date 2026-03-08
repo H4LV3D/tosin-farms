@@ -25,7 +25,7 @@ export default function ProductCard({
   const hasImages = product.images.length > 0;
 
   return (
-    <div className="bg-white rounded-2xl border border-stone-100 shadow-sm hover:shadow-md transition-all group overflow-hidden flex flex-col">
+    <div className="bg-white rounded-lg border border-stone-100 shadow-sm hover:shadow-md transition-all group overflow-hidden flex flex-col">
       {/* ── Image area ── */}
       <div className="relative h-48 bg-stone-100 overflow-hidden">
         {hasImages ? (
@@ -69,9 +69,8 @@ export default function ProductCard({
                     <button
                       key={i}
                       onClick={() => setImgIdx(i)}
-                      className={`w-1.5 h-1.5 rounded-full transition-all ${
-                        i === imgIdx ? "bg-white scale-125" : "bg-white/50"
-                      }`}
+                      className={`w-1.5 h-1.5 rounded-full transition-all ${i === imgIdx ? "bg-white scale-125" : "bg-white/50"
+                        }`}
                       aria-label={`Go to image ${i + 1}`}
                     />
                   ))}
@@ -88,11 +87,10 @@ export default function ProductCard({
 
         {/* Stock badge */}
         <span
-          className={`absolute top-3 left-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${
-            product.stock > 0
-              ? "bg-white/90 text-stone-800 backdrop-blur"
-              : "bg-red-100 text-red-700"
-          }`}
+          className={`absolute top-3 left-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${product.stock > 0
+            ? "bg-white/90 text-stone-800 backdrop-blur"
+            : "bg-red-100 text-red-700"
+            }`}
         >
           {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
         </span>
@@ -105,7 +103,7 @@ export default function ProductCard({
             {product.category}
           </span>
         )}
-        <h3 className="font-semibold text-stone-900 leading-snug line-clamp-2">
+        <h3 className="font-semibold font-lato text-stone-900 leading-snug line-clamp-2">
           {product.name}
         </h3>
         {product.description && (

@@ -1,15 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DispatchService } from './dispatch.service';
+import { DispatchManagerService } from './dispatch.service';
+import { DhlDispatchStrategy } from './strategies/dhl-dispatch.strategy';
+import { FedexDispatchStrategy } from './strategies/fedex-dispatch.strategy';
+import { GigDispatchStrategy } from './strategies/gig-dispatch.strategy';
 
-describe('DispatchService', () => {
-  let service: DispatchService;
+describe('DispatchManagerService', () => {
+  let service: DispatchManagerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DispatchService],
+      providers: [
+        DispatchManagerService,
+        { provide: DhlDispatchStrategy, useValue: {} },
+        { provide: FedexDispatchStrategy, useValue: {} },
+        { provide: GigDispatchStrategy, useValue: {} },
+      ],
     }).compile();
 
-    service = module.get<DispatchService>(DispatchService);
+    service = module.get<DispatchManagerService>(DispatchManagerService);
   });
 
   it('should be defined', () => {
