@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { FadeSlideUp, StaggerContainer, StaggerItem } from "@/components/shared/MotionComponents";
 
 export function Products() {
   const products = [
@@ -52,107 +55,116 @@ export function Products() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
         <div className="max-w-2xl mb-16">
-          <span className="reveal inline-block text-amber-500 text-xs font-bold uppercase tracking-widest mb-6">
-            What We Sell
-          </span>
-          <h2 className="reveal font-display text-3xl lg:text-5xl font-semibold tracking-tight mb-6">
-            Our Crops,
-            <br />
-            Our Products
-          </h2>
-          <p className="reveal text-stone-400 text-lg leading-relaxed">
-            From staple crops to artisan-processed foods — everything you need,
-            grown and made right here.
-          </p>
+          <FadeSlideUp>
+            <span className="inline-block text-amber-500 text-xs font-bold uppercase tracking-widest mb-6">
+              What We Sell
+            </span>
+          </FadeSlideUp>
+          <FadeSlideUp delay={0.1}>
+            <h2 className="font-display text-3xl lg:text-5xl font-semibold tracking-tight mb-6">
+              Our Crops,
+              <br />
+              Our Products
+            </h2>
+          </FadeSlideUp>
+          <FadeSlideUp delay={0.2}>
+            <p className="text-stone-400 text-lg leading-relaxed">
+              From staple crops to artisan-processed foods — everything you need,
+              grown and made right here.
+            </p>
+          </FadeSlideUp>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((p) => (
-            <Link
-              href={`/shop?category=${p.id}`}
-              key={p.id}
-              className="reveal product-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden group cursor-pointer block"
-            >
-              <div className="relative h-52 overflow-hidden">
-                <Image
-                  src={p.img}
-                  alt={p.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent"></div>
-                <span
-                  className={`absolute top-4 left-4 ${p.badgeColor} text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full`}
-                >
-                  {p.badge}
-                </span>
-              </div>
-              <div className="p-6">
-                <h3 className="font-display text-lg font-semibold text-white mb-2">
-                  {p.title}
-                </h3>
-                <p className="text-sm text-stone-400 leading-relaxed mb-4">
-                  {p.desc}
-                </p>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-amber-400 font-bold uppercase tracking-widest">
-                    {p.perk}
-                  </span>
-                  <svg
-                    className="w-4 h-4 text-stone-500 group-hover:text-amber-400 transition-colors"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
+            <StaggerItem key={p.id}>
+              <Link
+                href={`/shop?category=${p.id}`}
+                className="product-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden group cursor-pointer block h-full"
+              >
+                <div className="relative h-52 overflow-hidden">
+                  <Image
+                    src={p.img}
+                    alt={p.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent"></div>
+                  <span
+                    className={`absolute top-4 left-4 ${p.badgeColor} text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14M12 5l7 7-7 7"
-                    />
-                  </svg>
+                    {p.badge}
+                  </span>
                 </div>
-              </div>
-            </Link>
+                <div className="p-6">
+                  <h3 className="font-display text-lg font-semibold text-white mb-2">
+                    {p.title}
+                  </h3>
+                  <p className="text-sm text-stone-400 leading-relaxed mb-4">
+                    {p.desc}
+                  </p>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-amber-400 font-bold uppercase tracking-widest">
+                      {p.perk}
+                    </span>
+                    <svg
+                      className="w-4 h-4 text-stone-500 group-hover:text-amber-400 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 12h14M12 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
 
         {/* Stats strip */}
-        <div className="reveal mt-16 grid grid-cols-2 lg:grid-cols-4 gap-6 p-8 bg-white/5 border border-white/10 rounded-2xl">
-          <div className="text-center">
-            <div className="font-display text-3xl font-bold text-amber-400 mb-1">
-              20+
+        <FadeSlideUp className="mt-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 p-8 bg-white/5 border border-white/10 rounded-2xl">
+            <div className="text-center">
+              <div className="font-display text-3xl font-bold text-amber-400 mb-1">
+                20+
+              </div>
+              <div className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
+                Products
+              </div>
             </div>
-            <div className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
-              Products
+            <div className="text-center">
+              <div className="font-display text-3xl font-bold text-amber-400 mb-1">
+                Year-Round
+              </div>
+              <div className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
+                Supply
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-3xl font-bold text-amber-400 mb-1">
+                Same-Day
+              </div>
+              <div className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
+                Processing
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-3xl font-bold text-amber-400 mb-1">
+                Zero
+              </div>
+              <div className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
+                Artificial Additives
+              </div>
             </div>
           </div>
-          <div className="text-center">
-            <div className="font-display text-3xl font-bold text-amber-400 mb-1">
-              Year-Round
-            </div>
-            <div className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
-              Supply
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="font-display text-3xl font-bold text-amber-400 mb-1">
-              Same-Day
-            </div>
-            <div className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
-              Processing
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="font-display text-3xl font-bold text-amber-400 mb-1">
-              Zero
-            </div>
-            <div className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
-              Artificial Additives
-            </div>
-          </div>
-        </div>
+        </FadeSlideUp>
       </div>
     </section>
   );

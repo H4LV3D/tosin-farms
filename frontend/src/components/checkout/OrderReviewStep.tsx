@@ -157,10 +157,11 @@ export function OrderReviewStep({
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-stone-500">Subtotal</span>
-            <span className="font-medium text-[#1c1917]">
+            <span className="font-semibold text-xl text-[#1c1917]">
               ₦{subtotal.toLocaleString()}
             </span>
           </div>
+
           <div className="flex justify-between text-sm">
             <span className="text-stone-500">
               Shipping ({shippingData.dispatchType})
@@ -169,6 +170,7 @@ export function OrderReviewStep({
               ₦{shipping.toLocaleString()}
             </span>
           </div>
+
           <div className="border-t border-amber-100 pt-2 mt-2 flex justify-between">
             <span className="font-bold text-[#1c1917]">Total</span>
             <span className="font-bold text-xl text-amber-700">
@@ -197,6 +199,7 @@ export function OrderReviewStep({
         >
           ← Back
         </Button>
+
         <Button
           onClick={handlePlaceOrder}
           disabled={isSubmitting}

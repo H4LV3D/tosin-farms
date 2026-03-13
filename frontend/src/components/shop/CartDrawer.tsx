@@ -1,12 +1,13 @@
 "use client";
 
-import { X, ShoppingCart, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
+import { X, ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useCartStore } from "@/store/cart.store";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/dist/client/components/navigation";
 import Image from "next/image";
+import { HiArrowLongRight } from "react-icons/hi2";
 
 export function CartDrawer() {
   const {
@@ -47,8 +48,8 @@ export function CartDrawer() {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-stone-100">
           <div className="flex items-center gap-3">
-            <ShoppingCart className="w-5 h-5 text-amber-700" />
-            <span className="font-display text-lg font-semibold text-[#1c1917]">
+            {/* <ShoppingCart className="w-5 h-5 text-amber-700" /> */}
+            <span className="font-lato text-xl font-semibold text-[#1c1917]">
               Your Cart
             </span>
             {count > 0 && (
@@ -69,21 +70,21 @@ export function CartDrawer() {
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center py-20">
-              <div className="w-20 h-20 rounded-full bg-amber-50 flex items-center justify-center mb-4">
-                <ShoppingCart className="w-8 h-8 text-amber-300" />
+              <div className="w-20 h-20 flex items-center justify-center mb-4">
+                <ShoppingCart className="size-12 text-amber-700" />
               </div>
-              <p className="font-display text-lg text-stone-600 mb-1">
+              <p className="font-lato text-xl font-semibold text-stone-700 mb-1">
                 Your cart is empty
               </p>
-              <p className="text-sm text-stone-400 mb-6">
-                Add some fresh farm produce to get started.
+              <p className="text-[15px] text-stone-500 mb-6">
+                Add some produce to purchase.
               </p>
               <Button
                 onClick={() => {
                   closeCart();
                   router.push("/shop");
                 }}
-                className="bg-amber-700 hover:bg-amber-600 text-white rounded-full px-6 text-xs font-bold uppercase tracking-widest"
+                className="bg-amber-700 hover:bg-amber-600 text-white rounded-full px-8 h-11 text-xs font-bold uppercase tracking-widest"
               >
                 Browse Products
               </Button>
@@ -167,26 +168,29 @@ export function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="px-6 py-5 border-t border-stone-100 bg-stone-50/50 space-y-3">
-            <div className="flex items-center justify-between text-sm text-stone-500">
+          <div className="px-6 py-5 border-t border-stone-100 bg-stone-50/50 space-y-4">
+            <div className="flex items-center justify-between text-sm text-stone-500 py-1.5">
               <span>Subtotal ({count} items)</span>
-              <span className="font-bold text-[#1c1917]">
+              <span className="font-bold text-xl text-[#1c1917]">
                 ₦{total.toLocaleString()}
               </span>
             </div>
-            <p className="text-xs text-stone-400">
+
+            {/* <p className="text-xs text-stone-400">
               Shipping calculated at checkout
-            </p>
+            </p> */}
+
             <Link href="/checkout" onClick={closeCart}>
-              <Button className="w-full h-12 bg-amber-700 hover:bg-amber-600 text-white font-bold text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-amber-900/20 btn-shimmer group">
+              <Button className="w-full h-12 bg-amber-700 hover:bg-amber-600 text-white font-bold text-sm uppercase tracking-widest rounded-md shadow-lg shadow-amber-900/20 btn-shimmer group">
                 Proceed to Checkout
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <HiArrowLongRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
+
             <Link
               href="/shop"
               onClick={closeCart}
-              className="block text-center text-xs text-stone-400 hover:text-amber-700 transition-colors py-1"
+              className="block h-12 flex items-center justify-center text-center text-sm text-stone-400 hover:text-amber-700 transition-colors py-1"
             >
               Continue Shopping
             </Link>

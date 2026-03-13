@@ -1,51 +1,52 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchWishlist, addToWishlist, removeFromWishlist } from "@/lib/api";
 import { useStore } from "@/store";
 
 export function useWishlist() {
-    const [wishlist, setWishlist] = useState<string[]>([]); // Store product IDs
-    const [isLoading, setIsLoading] = useState(false);
+    const queryClient = useQueryClient();
     const isAuthenticated = useStore((s) => s.isAuthenticated);
 
-    const loadWishlist = async () => {
-        if (!isAuthenticated) return;
-        setIsLoading(true);
-        try {
-            const data = await fetchWishlist();
-            setWishlist(data.map((item) => item.product.id));
-        } catch (err) {
-            console.error("Failed to fetch wishlist:", err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const { data: wishlistData = [], isLoading } = useQuery({
+        queryKey: ["wishlist"],
+        queryFn: fetchWishlist,
+        enabled: isAuthenticated,
+    });
 
-    useEffect(() => {
-        loadWishlist();
-    }, [isAuthenticated]);
+    // Extract product IDs for quick lookup
+    const wishlistIds = wishlistData.map((item) => item.product.id);
+
+    const addMutation = useMutation({
+        mutationFn: (productId: string) => addToWishlist(productId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+        },
+    });
+
+    const removeMutation = useMutation({
+        mutationFn: (productId: string) => removeFromWishlist(productId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+        },
+    });
 
     const toggleWishlist = async (productId: string) => {
         if (!isAuthenticated) return;
-        const isSaved = wishlist.includes(productId);
-        try {
-            if (isSaved) {
-                await removeFromWishlist(productId);
-                setWishlist((prev) => prev.filter((id) => id !== productId));
-            } else {
-                await addToWishlist(productId);
-                setWishlist((prev) => [...prev, productId]);
-            }
-        } catch (err) {
-            console.error("Failed to toggle wishlist:", err);
+        
+        const isCurrentlySaved = wishlistIds.includes(productId);
+        
+        if (isCurrentlySaved) {
+            await removeMutation.mutateAsync(productId);
+        } else {
+            await addMutation.mutateAsync(productId);
         }
     };
 
     return {
-        wishlist,
+        wishlist: wishlistIds,
         toggleWishlist,
         isLoading,
-        isSaved: (productId: string) => wishlist.includes(productId),
+        isSaved: (productId: string) => wishlistIds.includes(productId),
     };
 }

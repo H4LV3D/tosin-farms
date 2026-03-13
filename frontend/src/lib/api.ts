@@ -11,6 +11,7 @@ export interface Product {
   stock: number;
   category?: string;
   images: string[];
+  units?: string[];
   createdAt: string;
   updatedAt: string;
 }

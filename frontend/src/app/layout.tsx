@@ -4,6 +4,8 @@ import "./globals.css";
 import QueryProvider from "@/providers/QueryProvider";
 import StoreProvider from "@/providers/StoreProvider";
 import { Toaster } from "react-hot-toast";
+import { LenisProvider } from "@/components/shared/LenisProvider";
+import { PageLoader } from "@/components/shared/PageLoader";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -33,21 +35,24 @@ export default function RootLayout({
       >
         <StoreProvider>
           <QueryProvider>
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  fontFamily: "var(--font-dm-sans)",
-                  fontSize: "14px",
-                  borderRadius: "8px",
-                },
-                success: {
-                  iconTheme: { primary: "#b45309", secondary: "#fff" },
-                },
-              }}
-            />
-            <main>{children}</main>
+            <LenisProvider>
+              <PageLoader />
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    fontFamily: "var(--font-dm-sans)",
+                    fontSize: "14px",
+                    borderRadius: "8px",
+                  },
+                  success: {
+                    iconTheme: { primary: "#b45309", secondary: "#fff" },
+                  },
+                }}
+              />
+              <main>{children}</main>
+            </LenisProvider>
           </QueryProvider>
         </StoreProvider>
       </body>

@@ -67,6 +67,7 @@ export default function CheckoutPage() {
                 }
               />
             )}
+
             {state.step === 4 && "orderId" in state && (
               <OrderSuccess
                 orderId={state.orderId}
@@ -135,7 +136,7 @@ export default function CheckoutPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-stone-500">Subtotal</span>
-                  <span className="font-medium text-[#1c1917]">
+                  <span className="font-semibold text-base text-[#1c1917]">
                     ₦{totalPrice.toLocaleString()}
                   </span>
                 </div>
@@ -144,12 +145,14 @@ export default function CheckoutPage() {
                   <span className="text-stone-400 text-xs">
                     {state.step >= 3 && "shippingCost" in state
                       ? `₦${state.shippingCost.toLocaleString()}`
-                      : "At next step"}
+                      : "--"}
                   </span>
                 </div>
                 <div className="border-t border-stone-100 pt-2 flex justify-between">
-                  <span className="font-bold text-[#1c1917]">Total</span>
-                  <span className="font-bold text-amber-700">
+                  <span className="font-bold text-sm text-[#1c1917]">
+                    Total
+                  </span>
+                  <span className="font-bold text-xl text-amber-700">
                     ₦
                     {(
                       totalPrice +

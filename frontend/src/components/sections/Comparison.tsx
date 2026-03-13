@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
+import { FadeSlideUp } from "@/components/shared/MotionComponents";
 
 export function Comparison() {
   return (
@@ -7,23 +10,30 @@ export function Comparison() {
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-amber-900/15 blur-[100px] rounded-full pointer-events-none"></div>
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
         <div className="max-w-2xl mb-16">
-          <span className="reveal inline-block text-amber-500 text-xs font-bold uppercase tracking-widest mb-6">
-            Why It Matters
-          </span>
-          <h2 className="reveal font-display text-3xl lg:text-5xl font-semibold tracking-tight mb-6">
-            Farm-Direct vs. Market:
-            <br />
-            The Real Difference
-          </h2>
-          <p className="reveal text-stone-400 text-lg leading-relaxed">
-            When you buy from Tosi Farms, you&apos;re not just getting food —
-            you&apos;re getting quality, freshness, and trust you can taste.
-          </p>
+          <FadeSlideUp>
+            <span className="inline-block text-amber-500 text-xs font-bold uppercase tracking-widest mb-6">
+              Why It Matters
+            </span>
+          </FadeSlideUp>
+          <FadeSlideUp delay={0.1}>
+            <h2 className="font-display text-3xl lg:text-5xl font-semibold tracking-tight mb-6">
+              Farm-Direct vs. Market:
+              <br />
+              The Real Difference
+            </h2>
+          </FadeSlideUp>
+          <FadeSlideUp delay={0.2}>
+            <p className="text-stone-400 text-lg leading-relaxed">
+              When you buy from Tosi Farms, you&apos;re not just getting food —
+              you&apos;re getting quality, freshness, and trust you can taste.
+            </p>
+          </FadeSlideUp>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8">
-            <div className="reveal bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+            <FadeSlideUp delay={0.1}>
+            <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
               <div className="grid grid-cols-4 gap-4 p-6 border-b border-white/5 bg-white/5 text-[10px] uppercase tracking-widest font-bold text-stone-500">
                 <div className="col-span-1">What You Get</div>
                 <div className="text-right">Market / Trader</div>
@@ -105,10 +115,12 @@ export function Comparison() {
                 </div>
               </div>
             </div>
+            </FadeSlideUp>
           </div>
 
           <div className="lg:col-span-4">
-            <div className="reveal relative h-full min-h-[400px] rounded-2xl overflow-hidden group border border-white/5">
+            <FadeSlideUp delay={0.2}>
+            <div className="relative h-full min-h-[400px] rounded-2xl overflow-hidden group border border-white/5">
               <Image
                 src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=600&q=75"
                 alt="Fresh farm produce basket"
@@ -131,6 +143,7 @@ export function Comparison() {
                 </div>
               </div>
             </div>
+            </FadeSlideUp>
           </div>
         </div>
       </div>

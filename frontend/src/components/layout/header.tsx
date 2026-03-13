@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X, User } from "lucide-react";
+import { motion } from "framer-motion";
 import { CartButton } from "@/components/shop/CartButton";
 import BrandLogo from "../shared/brandLogo/brandLogo";
 import {
@@ -12,6 +13,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
+
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/shop", label: "Shop Now" },
+  { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact Us" },
+] as const;
 
 interface HeaderProps {
   isHomePage?: boolean;
@@ -43,44 +51,33 @@ export function Header({ isHomePage = false }: HeaderProps) {
           isDarkTheme ? "bg-transparent" : "bg-cream/90 backdrop-blur-md"
         }`}
       ></div>
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-3">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between">
         {/* Logo */}
         <BrandLogo />
 
         {/* Nav */}
-        <nav className="hidden lg:flex items-center justify-center gap-8">
-          <Link
-            href="/"
-            className={`text-xs uppercase tracking-widest font-semibold hover:text-amber-700 transition-colors ${
-              isDarkTheme ? "text-stone-300" : "text-stone-700"
-            }`}
-          >
-            Home
-          </Link>
-          <Link
-            href="/shop"
-            className={`text-xs uppercase tracking-widest font-semibold hover:text-amber-700 transition-colors ${
-              isDarkTheme ? "text-stone-300" : "text-stone-700"
-            }`}
-          >
-            Shop Now
-          </Link>
-          <Link
-            href="/about"
-            className={`text-xs uppercase tracking-widest font-semibold hover:text-amber-700 transition-colors ${
-              isDarkTheme ? "text-stone-300" : "text-stone-700"
-            }`}
-          >
-            About Us
-          </Link>
-          <Link
-            href="/contact"
-            className={`text-xs uppercase tracking-widest font-semibold hover:text-amber-700 transition-colors ${
-              isDarkTheme ? "text-stone-300" : "text-stone-700"
-            }`}
-          >
-            Contact Us
-          </Link>
+        <nav className="hidden lg:flex items-center justify-center gap-10 pl-40">
+          {NAV_LINKS.map(({ href, label }, i) => (
+            <motion.div
+              key={href}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: i * 0.08,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <Link
+                href={href}
+                className={`text-[15px] uppercase tracking-widest font-semibold hover:text-amber-700 transition-colors ${
+                  isDarkTheme ? "text-stone-300" : "text-stone-700"
+                }`}
+              >
+                {label}
+              </Link>
+            </motion.div>
+          ))}
         </nav>
 
         {/* Right actions */}
@@ -165,50 +162,30 @@ export function Header({ isHomePage = false }: HeaderProps) {
               : "bg-cream border-amber-200/60"
           }`}
         >
-          <Link
-            onClick={() => setIsMobileMenuOpen(false)}
-            href="/"
-            className={`block text-sm font-semibold py-2 border-b transition-colors ${
-              isDarkTheme
-                ? "text-stone-300 border-white/10"
-                : "text-stone-700 border-stone-100"
-            }`}
-          >
-            Home
-          </Link>
-          <Link
-            onClick={() => setIsMobileMenuOpen(false)}
-            href="/shop"
-            className={`block text-sm font-semibold py-2 border-b transition-colors ${
-              isDarkTheme
-                ? "text-amber-400 border-white/10"
-                : "text-amber-700 border-stone-100"
-            }`}
-          >
-            Shop Now
-          </Link>
-          <Link
-            onClick={() => setIsMobileMenuOpen(false)}
-            href="/about"
-            className={`block text-sm font-semibold py-2 border-b transition-colors ${
-              isDarkTheme
-                ? "text-stone-300 border-white/10"
-                : "text-stone-700 border-stone-100"
-            }`}
-          >
-            About Us
-          </Link>
-          <Link
-            onClick={() => setIsMobileMenuOpen(false)}
-            href="/contact"
-            className={`block text-sm font-semibold py-2 border-b transition-colors ${
-              isDarkTheme
-                ? "text-stone-300 border-white/10"
-                : "text-stone-700 border-stone-100"
-            }`}
-          >
-            Contact Us
-          </Link>
+          {NAV_LINKS.map(({ href, label }, i) => (
+            <motion.div
+              key={href}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.3,
+                delay: i * 0.07,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <Link
+                onClick={() => setIsMobileMenuOpen(false)}
+                href={href}
+                className={`block text-sm font-semibold py-2 border-b transition-colors ${
+                  isDarkTheme
+                    ? "text-stone-300 border-white/10"
+                    : "text-stone-700 border-stone-100"
+                }`}
+              >
+                {label}
+              </Link>
+            </motion.div>
+          ))}
           {user ? (
             <div className="pt-2 mt-4 border-t border-amber-200/60">
               <div className="flex items-center gap-3 mb-4 mt-2">
@@ -224,6 +201,7 @@ export function Header({ isHomePage = false }: HeaderProps) {
                   </p>
                 </div>
               </div>
+
               <Link
                 onClick={() => setIsMobileMenuOpen(false)}
                 href={user.role === "ADMIN" ? "/admin/dashboard" : "/profile"}
@@ -231,6 +209,7 @@ export function Header({ isHomePage = false }: HeaderProps) {
               >
                 Profile
               </Link>
+
               <button
                 onClick={() => {
                   logout();

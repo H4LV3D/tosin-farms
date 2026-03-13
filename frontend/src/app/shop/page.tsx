@@ -2,11 +2,12 @@
 
 import { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Package } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { fetchCategories, fetchProducts } from "@/lib/api";
 import PageLayout from "@/components/layout/pageLayout";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { ShopFilters } from "@/components/shop/ShopFilters";
+import { ShopEmptyState } from "@/components/shop/ShopEmptyState";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export default function ShopPage() {
@@ -34,6 +35,11 @@ export default function ShopPage() {
     setActiveCategory(cat);
   }, []);
 
+  const handleReset = useCallback(() => {
+    setActiveCategory("all");
+    setSearchQuery("");
+  }, []);
+
   return (
     <PageLayout>
       <main className="min-h-screen pt-28 pb-24 bg-cream">
@@ -43,7 +49,7 @@ export default function ShopPage() {
             <span className="text-amber-700 text-xs font-bold uppercase tracking-widest mb-3 block">
               Fresh from the Farm
             </span>
-            <h1 className="font-display text-4xl lg:text-5xl font-semibold text-earth tracking-tight mb-3">
+            <h1 className="font-lato text-4xl lg:text-5xl font-bold text-earth tracking-tight mb-3">
               Online Shop
             </h1>
             {/* <p className="text-stone-500 max-w-xl text-base leading-relaxed">
@@ -71,15 +77,11 @@ export default function ShopPage() {
               <p className="text-stone-400 text-sm">Loading products...</p>
             </div>
           ) : products.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-64 gap-4">
-              <div className="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center">
-                <Package className="w-8 h-8 text-stone-300" />
-              </div>
-              <p className="text-stone-500 font-medium">No products found</p>
-              <p className="text-stone-400 text-sm">
-                Try adjusting your search or category filter.
-              </p>
-            </div>
+            <ShopEmptyState
+              searchQuery={searchQuery}
+              activeCategory={activeCategory}
+              onReset={handleReset}
+            />
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((p) => (

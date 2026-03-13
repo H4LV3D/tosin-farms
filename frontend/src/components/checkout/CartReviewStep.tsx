@@ -125,23 +125,24 @@ export function CartReviewStep({ onContinue }: CartReviewStepProps) {
 
       {/* Total */}
       <div className="p-5 bg-amber-50/60 border border-amber-100 rounded-2xl mb-6">
-        <div className="flex items-center justify-between text-sm mb-2">
-          <span className="text-stone-500">Subtotal</span>
-          <span className="font-bold text-[#1c1917]">
-            ₦{total.toLocaleString()}
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-stone-500 text-[15px]">Subtotal</span>
+          <span className="font-bold text-2xl tracking-tighter text-[#1c1917]">
+            ₦ {total.toLocaleString()}
           </span>
         </div>
+
         <div className="flex items-center justify-between text-sm">
-          <span className="text-stone-500">Shipping</span>
-          <span className="text-stone-400">Calculated at next step</span>
+          <span className="text-stone-500 text-[15px] ">Shipping</span>
+          <span className="text-stone-400 text-3xl">--</span>
         </div>
       </div>
 
       <Button
         onClick={onContinue}
-        className="w-full h-13 bg-amber-700 hover:bg-amber-600 text-white font-bold text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-amber-900/20 btn-shimmer"
+        className="w-full h-13 bg-amber-700 hover:bg-amber-600 text-white font-bold text-sm uppercase tracking-wide rounded-md shadow-amber-900/20 btn-shimmer"
       >
-        Continue to Shipping →
+        Continue to Shipping
       </Button>
     </div>
   );

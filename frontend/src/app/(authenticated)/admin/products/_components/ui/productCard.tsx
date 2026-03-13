@@ -69,8 +69,9 @@ export default function ProductCard({
                     <button
                       key={i}
                       onClick={() => setImgIdx(i)}
-                      className={`w-1.5 h-1.5 rounded-full transition-all ${i === imgIdx ? "bg-white scale-125" : "bg-white/50"
-                        }`}
+                      className={`w-1.5 h-1.5 rounded-full transition-all ${
+                        i === imgIdx ? "bg-white scale-125" : "bg-white/50"
+                      }`}
                       aria-label={`Go to image ${i + 1}`}
                     />
                   ))}
@@ -87,10 +88,11 @@ export default function ProductCard({
 
         {/* Stock badge */}
         <span
-          className={`absolute top-3 left-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${product.stock > 0
-            ? "bg-white/90 text-stone-800 backdrop-blur"
-            : "bg-red-100 text-red-700"
-            }`}
+          className={`absolute top-3 left-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${
+            product.stock > 0
+              ? "bg-white/90 text-stone-800 backdrop-blur"
+              : "bg-red-100 text-red-700"
+          }`}
         >
           {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
         </span>
